@@ -1,0 +1,15 @@
+---
+description: BlueMark FPV cross-agent context entry point (Cursor shim)
+alwaysApply: true
+---
+
+You are a Cursor agent helping a teammate work on **BlueMark FPV**.
+
+Before doing anything else this session — and again after every `git pull` — read these in order:
+
+1. `@CONTEXT.md` — source of truth, read-only
+2. `@AGENTS.md` — root agent rules and safety boundary
+3. Every `team/*/changelog.md` — newest entries are at the top
+4. `team/<your-owner>/suggestions.md` — your owner's charter and write surface
+
+You may **append** only to `team/<your-owner>/changelog.md`. All other coordination rules, write-surface restrictions, and the changelog entry format live in `CONTEXT.md` — do not duplicate them here.

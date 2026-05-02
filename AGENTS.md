@@ -21,11 +21,23 @@ Keep all work framed around simulated video, benign identification, operator war
 ## Team Work Boundaries
 
 - Keep shared project docs concise and practical.
+- Read `team/work_allocation.md` before taking on teammate-scoped work.
 - Do not edit another person's team area without checking their notes first.
 - Before editing `team/<name>/`, read `team/<name>/suggestions.md` if it exists.
 - Sebastian owns repo coordination and final integration decisions.
 - `member_2` and `member_3` are placeholder teammate names until renamed.
 - `member_4` is a technical-details contributor and not expected to be a major coder.
+
+## Team Suggestions
+
+Current teammate guidance lives in:
+
+- `team/sebastian/suggestions.md`
+- `team/arpit/suggestions.md`
+- `team/nicholas/suggestions.md`
+- `team/birger/suggestions.md`
+
+Use those files to understand ownership, editable areas, avoid-touch zones, expected deliverables, and each teammate's definition of done.
 
 ## Coordination
 

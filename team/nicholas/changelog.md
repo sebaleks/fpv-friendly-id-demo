@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Nicholas's agent writes here.
 
+### 2026-05-02 22:15 - Nicholas (via Claude Code)
+
+- Changed: Recorded team meeting outcome from verbal sync. New artifact `team/nicholas/meeting_2026-05-02.md` captures: FPV first-person perspective confirmed; multi-signal cross-validation direction (visual YOLO + marker + optional bird's-eye stitching + acoustic/infrasound/fiber/ESP32 as pitch-only); confidence × risk-zone action recommendations; demo refinement (two-class drone footage, fine-tune YOLO); evaluation metrics (confusion matrix, FP-rate = friendly jammed, FN-rate = foe missed). Filed NICK-006..009 in Priority Forge.
+- Files: `team/nicholas/meeting_2026-05-02.md`, `team/nicholas/changelog.md`
+- Why: Team sync surfaced a multi-signal direction and three explicit action items (SME question list for Birger, gap-weaving, ML model candidates). Disperse asks to teammates via this changelog before scope drifts further.
+- Assumptions: Sebastian-owned files (`docs/`, `AGENTS.md`, `HANDOFF.md`) untouched per CONTEXT.md write-surface rules; asks for him live in the meeting recap. Read Sebastian's just-pushed docs (`docs/cost_tiers.md`, `dashboard_states.md`, `acceptance_checklist.md`, `demo_script.md`) — Tier 0 software-first framing in `cost_tiers.md` resolves the meeting's open hardware-vs-software scope question, which unblocks NICK-008.
+- Open questions: Multi-signal fusion + risk-zone — does it sit inside Tier 0 (pure software) or require Tier 1 (existing RC/telemetry metadata)? **Ask Sebastian** before NICK-008 architecture lock.
+- Next step: Tackle NICK-009 (self-onboarding on FPV/OSD) first — fastest unblocker. Then NICK-006 (SME questions).
+
 ### 2026-05-02 14:22 - Nicholas (via Cursor / Claude Opus 4.7)
 
 - Changed: Manual first-pass sync after pull on this Cursor clone. Enabled `.githooks` locally (`git config core.hooksPath .githooks`) and added Layer-2 Cursor shim at `.cursor/rules/main.mdc` (`alwaysApply: true`) that points Cursor agents at `CONTEXT.md`, `AGENTS.md`, and all `team/*/changelog.md` — no content duplication.

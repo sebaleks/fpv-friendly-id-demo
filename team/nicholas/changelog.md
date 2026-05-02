@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Nicholas's agent writes here.
 
+### 2026-05-02 22:55 - Nicholas (via Claude Code)
+
+- Changed: Recorded post-meeting SME constraint from Birger ("assume jammed; most decisions on the drone") and worked through architecture implications. Disambiguated two video-stuff problems we'd been mushing (self-marking vs other-drone classification). Drafted urgent 4-question doc for Birger to unblock NICK-008. Audited the existing 12 SME seed Qs — 5 demoted (Q5–8, Q11), 1 needs follow-up (Q10), rest carry through. Updated meeting recap with constraint section, signal-survives-jamming table, cost-tier split implication, safety-boundary tension, and new tensions list. **NICK-008 marked blocked.**
+- Files: `team/nicholas/birger_urgent_questions.md` (new), `team/nicholas/meeting_2026-05-02.md` (overhaul), `team/nicholas/changelog.md`
+- Why: Birger's constraint genuinely inverts the architecture — ground-side fusion vs drone-side fusion is not a tweak. Locking the seed before he answers risks throwing away NICK-008 work. Better to pause, ship the urgent doc, and let his answer drive the lock.
+- Assumptions: Birger will reply within hackathon timescale. If he doesn't, fall back to interpretation #2 ("jamming-tolerant, comms when available") as the most demo-survivable architecture. The urgent doc sits in Nicholas's territory but is addressed *to* Birger via changelog ASK — he reads it on his next pull.
+- Open questions: For Sebastian — does the cost-tier story need a split (self-mark Tier 0, onboard classifier Tier 2-3)? Does the safety-boundary language survive a drone-as-consumer architecture? Surfaced in meeting recap "Ask: Sebastian" section.
+- Next step: Wait on Birger's urgent answers. While waiting, Nicholas can still tackle NICK-009 self-onboarding — the OSD/FPV first-principles content is independent of the drone-side-vs-ground-side architecture pick.
+
 ### 2026-05-02 22:15 - Nicholas (via Claude Code)
 
 - Changed: Recorded team meeting outcome from verbal sync. New artifact `team/nicholas/meeting_2026-05-02.md` captures: FPV first-person perspective confirmed; multi-signal cross-validation direction (visual YOLO + marker + optional bird's-eye stitching + acoustic/infrasound/fiber/ESP32 as pitch-only); confidence × risk-zone action recommendations; demo refinement (two-class drone footage, fine-tune YOLO); evaluation metrics (confusion matrix, FP-rate = friendly jammed, FN-rate = foe missed). Filed NICK-006..009 in Priority Forge.

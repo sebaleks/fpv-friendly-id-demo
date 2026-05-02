@@ -18,6 +18,8 @@ Do not add or advise on:
 
 Keep all work framed around simulated video, benign identification, operator warnings, and non-lethal deconfliction.
 
+**Hard event constraint:** the hackathon will eliminate teams whose system makes autonomous engagement decisions. Human-in-loop is required, not preferred. Every dashboard state must surface "Identification aid only. Human decision required."
+
 ## Team Work Boundaries
 
 - Keep shared project docs concise and practical.

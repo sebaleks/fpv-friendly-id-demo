@@ -47,8 +47,20 @@
 
 - [ ] Problem statement is clear in one sentence.
 - [ ] Demo can be narrated in two minutes.
-- [ ] Safety framing is explicit.
+- [ ] Safety framing is explicit (human-in-loop is a hard event constraint, not preferred).
 - [ ] Production caveats are stated: integration, testing, key management, and real-world validation.
+
+## Safety Language Audit
+
+- [ ] No "unknown = foe" language anywhere in repo (`grep -ri "unknown.*foe\|treat.*as foe" docs/ src/ team/` is empty).
+- [ ] No autonomous-engagement language anywhere (`grep -ri "shoot.*down\|engage.*drone" docs/ src/ team/` returns only safety-boundary disclaimers).
+- [ ] Risk-zone "shoot it down" framing has been fully scrubbed (replaced with attention-bias semantics, then dropped from MVP).
+
+## Hardware
+
+- [ ] MVP runs without Raspberry Pi AI Camera (receiver-side AI on a laptop is sufficient).
+- [ ] Optional hardware tiers stay under their stated cost constraint (`docs/cost_tiers.md`).
+- [ ] No claim that Tier 3 hardware is procurable on the Ukrainian front without verification (Birger SME question pending).
 
 ## Live Demo Fallback
 

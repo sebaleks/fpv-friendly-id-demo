@@ -1,0 +1,57 @@
+{
+  "generated_at": 1777764699,
+  "mission_id": "MISSION-2026-05-02-A",
+  "feeds": [
+    {
+      "feed_id": "FEED-A",
+      "state": "FRIENDLY_VERIFIED",
+      "confidence": 0.95,
+      "signals_used": [
+        "marker",
+        "time_window",
+        "mission_match",
+        "visual_profile",
+        "rc_session"
+      ],
+      "reason": "Marker authenticated and fresh, mission match, 2 supporting signal(s)."
+    },
+    {
+      "feed_id": "FEED-B",
+      "state": "LIKELY_FRIENDLY",
+      "confidence": 0.65,
+      "signals_used": [
+        "marker",
+        "time_window",
+        "mission_match"
+      ],
+      "reason": "Marker authenticated and fresh with mission match, but no corroborating supporting signal."
+    },
+    {
+      "feed_id": "FEED-C",
+      "state": "UNKNOWN_NEEDS_REVIEW",
+      "confidence": 0.2,
+      "signals_used": [],
+      "reason": "No valid friendly marker identified. Unknown is not foe — human review required."
+    },
+    {
+      "feed_id": "FEED-D",
+      "state": "SIGNATURE_CORRUPTED",
+      "confidence": 0.4,
+      "signals_used": [
+        "marker"
+      ],
+      "reason": "Marker-like data present but too noisy or incomplete to verify."
+    },
+    {
+      "feed_id": "FEED-E",
+      "state": "POSSIBLE_SPOOF",
+      "confidence": 0.1,
+      "signals_used": [
+        "marker",
+        "time_window",
+        "mission_match"
+      ],
+      "reason": "Marker-like data decoded but failed HMAC, freshness, or mission-match."
+    }
+  ]
+}

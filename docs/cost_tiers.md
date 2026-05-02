@@ -94,6 +94,14 @@ Downside:
 
 Pitch: Useful for prototypes or higher-value FPVs, but not the preferred path for mass-produced cheap drones.
 
+## Note on Pi AI Camera (Sony IMX500)
+
+The Raspberry Pi AI Camera using Sony IMX500 onboard inference fits inside Tier 3 as an *optional* hardware path for higher-value drones or for a receiver-side compute upgrade. It is **not required** for the BlueMark FPV MVP — receiver-side AI runs on the existing video feed using a laptop-class machine.
+
+**Open question:** availability of Raspberry Pi (and the Pi AI Camera) on the Ukrainian front is unconfirmed. Cheaper / more available alternatives (NUC-class, ruggedized x86 mini-PC, Jetson Orin Nano clones) should be researched before claiming Tier 3 hardware in pitch. SME (Birger) question NICK-006 Q13 covers this.
+
 ## Recommendation
 
 For the hackathon, present BlueMark FPV as Tier 0: a pure software OSD-marker system with near-zero marginal drone cost. Tier 1 adds cross-validation from existing RC/telemetry metadata. Tier 2 stays under roughly $25 when a tiny helper board is needed. Tier 3 remains under the $70 constraint for some prototypes, but it is not the default path for disposable FPV scale.
+
+The MVP runs receiver-side AI on existing FPV video feeds. **No drone-side AI hardware is required.**

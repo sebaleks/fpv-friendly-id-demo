@@ -9,15 +9,20 @@ Cost framing lives in `docs/cost_tiers.md`. The preferred demo and pitch directi
 ## Planned Components
 
 - Simulated FPV video source.
-- OSD-like authenticated marker overlay.
+- OSD-like HMAC-authenticated marker overlay.
 - Video degradation and noise simulator.
-- Receiver-side marker detector.
-- Operator dashboard with four states:
-  - `Friendly Verified`
-  - `Unknown`
-  - `Corrupted`
-  - `Possible Spoof`
-- Human-in-the-loop warning and explanation area.
+- Receiver-side multi-signal fusion (marker + time window + mission manifest + visual profile + optional RC/session + optional RF). Runs on a laptop-class machine.
+- Operator dashboard with **five states** (see `docs/dashboard_states.md`):
+  - `FRIENDLY_VERIFIED`
+  - `LIKELY_FRIENDLY`
+  - `UNKNOWN_NEEDS_REVIEW`
+  - `SIGNATURE_CORRUPTED`
+  - `POSSIBLE_SPOOF`
+- Human-in-the-loop warning on every state.
+
+## Receiver-Side Edge AI (locked direction)
+
+All identification logic runs **receiver-side** on existing FPV video feeds. No drone-side AI hardware is required for the MVP. Per-drone marginal cost stays at Tier 0 (~$0). See `docs/cost_tiers.md` for hardware tiers and `docs/fusion_architecture.md` for the multi-signal fusion pipeline.
 
 ## Data Flow
 
@@ -30,7 +35,9 @@ Cost framing lives in `docs/cost_tiers.md`. The preferred demo and pitch directi
 ## Explicit Non-Goals
 
 - No autonomous targeting.
+- No autonomous engagement decisions (hard event constraint — see `AGENTS.md`).
 - No weapon control.
 - No jamming decisions.
 - No evasion logic.
 - No real-world deployment procedure.
+- No drone-side AI hardware as a requirement.

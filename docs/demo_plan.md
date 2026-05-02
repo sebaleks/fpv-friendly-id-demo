@@ -12,21 +12,25 @@ As a friendly EW monitoring operator, I need a quick visual aid that tells me wh
 
 A friendly EW monitoring team sees multiple FPV-style video feeds in a contested environment. Cheap FPV drones often share similar analog video characteristics and usually lack expensive IFF hardware. BlueMark FPV adds a small authenticated marker to friendly simulated feeds and shows receiver-side classification in a human-in-the-loop dashboard.
 
-## Three Demo Feeds
+## Three Demo Feeds (MVP — optional 4th for stretch)
 
-1. Friendly signed feed: Valid OSD-like marker is present and readable.
-2. Unsigned unknown feed: No valid marker is present.
-3. Degraded/corrupted signed feed: Marker-like data is present but degraded, incomplete, or too noisy to verify.
+1. Friendly signed feed: Valid HMAC marker, fresh timestamp, mission match → `FRIENDLY_VERIFIED`.
+2. Unsigned unknown feed: No valid marker → `UNKNOWN_NEEDS_REVIEW`. Note: unknown is *not* foe.
+3. Degraded/corrupted signed feed: Marker-like data present but too noisy to verify → `SIGNATURE_CORRUPTED`.
+4. **Stretch (optional 4th):** Marker-like overlay failing HMAC authentication → `POSSIBLE_SPOOF`. Or `LIKELY_FRIENDLY` (valid marker, missing mission match) if spoof feels too edgy for the demo.
+
+Dashboard is a React + Vite SPA reading a static `feeds.json` (written by `scripts/generate_feeds.py`). No live backend in the demo path.
 
 ## What the Audience Should See
 
-- Three FPV-style feed panels visible at once.
+- Three (or four) FPV-style feed panels visible at once.
 - Feed A labeled `Friendly Verified`.
-- Feed B labeled `Unknown`.
+- Feed B labeled `Unknown — Needs Review`.
 - Feed C labeled `Signature Corrupted / Needs Human Review`.
-- Confidence and signal quality shown for each feed.
+- (Optional) Feed D labeled `Possible Spoof` or `Likely Friendly`.
+- Confidence percentage and `signals_used` breakdown shown for each feed.
 - Persistent warning: `Identification aid only. Human decision required.`
-- Presenter states this is simulated, non-lethal, and not production-grade IFF.
+- Presenter states this is simulated, non-lethal, runs receiver-side on a laptop, requires no drone-side AI hardware, and is not production-grade IFF.
 
 ## MVP Success Criteria
 

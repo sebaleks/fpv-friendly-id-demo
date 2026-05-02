@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Runs after `git pull` / `git merge`. Prints a reminder to re-read shared context.
+# Modifies nothing. Enable once per clone with: git config core.hooksPath .githooks
+cat <<'EOF'
+
+================================================================
+  BlueMark FPV — context update detected (post-merge)
+  Tell your AI agent to re-read:
+    - CONTEXT.md
+    - team/*/changelog.md
+  before continuing work.
+================================================================
+
+EOF

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Runs after `git checkout` / fresh clone. Same reminder as post-merge.
+# Modifies nothing. Enable once per clone with: git config core.hooksPath .githooks
+cat <<'EOF'
+
+================================================================
+  BlueMark FPV — checkout detected
+  Tell your AI agent to read:
+    - CONTEXT.md (start here)
+    - AGENTS.md
+    - team/*/changelog.md
+  before continuing work.
+================================================================
+
+EOF

@@ -11,6 +11,14 @@ Use this file to keep the team coordinated during the hackathon.
 - Concrete demo plan added.
 - No implementation started.
 
+### 2026-05-02 21:08 - Nicholas
+
+- Changed: Added cross-agent context system to mitigate merge-conflicts on direct push to main. New `CONTEXT.md` (root, read-only prompt) tells each agent to re-read `team/*/changelog.md` after every pull. Each teammate's agent appends only to their own `team/<name>/changelog.md` — partitioned write surfaces means zero cross-author conflicts. `.githooks/post-merge` + `post-checkout` print a reminder banner; enable once per clone with `git config core.hooksPath .githooks`. `CLAUDE.md` added as Claude Code auto-load entry point.
+- Files: `CONTEXT.md`, `CLAUDE.md`, `.githooks/post-merge`, `.githooks/post-checkout`, `team/nicholas/changelog.md`, `HANDOFF.md`
+- Assumptions: Going forward, per-agent change logs land in `team/<name>/changelog.md`. `HANDOFF.md` remains Sebastian's coordination doc — he can decide whether to roll changelogs into it or let it be replaced.
+- Open questions: Sebastian, do you want `HANDOFF.md`'s role to change, or stay as-is alongside the changelogs? Each teammate also needs to be told to run `git config core.hooksPath .githooks` once.
+- Next step: Teammates enable the hooks; their AIs read `CONTEXT.md`. Nicholas moves to NICK-001 (marker/detector design).
+
 ### 2026-05-02 13:34 - Codex
 
 - Changed: Added a concrete three-feed demo plan with script, MVP, stretch, safety, and fallback.

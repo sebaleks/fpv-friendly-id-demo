@@ -1,20 +1,13 @@
-# Urgent clarifications for Birger — 2026-05-02
+# Urgent clarifications for Birger — 2026-05-02 (revised)
 
-Birger — sending these ahead of the full SME questionnaire (which lives in `team/nicholas/meeting_2026-05-02.md`). NICK-008 (architecture proposal) is paused until I know your read on these four. Short answers are fine.
+Birger — partial answers landed via Sebastian since the original draft of this doc:
 
-## 1. The receiver
+- **Human-in-loop is confirmed** (and is a hard event constraint — we'd be eliminated otherwise).
+- **We're committing to Problem A**: the friendly drone embeds an authenticated OSD-style marker into its own video; a ground EW team reads the marker and classifies feeds. Problem B (drone-onboard classification of *other* drones in its FPV view) is demoted to a pitch-side mention, not an MVP track.
 
-In your mental model of BlueMark, who/what is reading the friend-marker on a friendly drone's video? Pick whichever is closest:
+That closes original Q1 (receiver = ground EW team) and Q4 (decision consumer = human operator). Two questions remain. Short answers fine.
 
-- Ground EW team (laptop / dashboard / SDR rig)
-- Another friendly drone within mesh range
-- The drone itself, examining its own outbound video
-- The same drone classifying *other* drones it sees in its FPV camera (different problem from the marker — please flag if you mean this)
-- Some combination — specify
-
-This pivots the architecture. Everything else follows.
-
-## 2. Jamming pattern
+## 1. Jamming pattern
 
 When you said "assume jammed," do you mean:
 
@@ -22,30 +15,16 @@ When you said "assume jammed," do you mean:
 - Intermittent denial — comms work in windows but cannot be counted on
 - Defensive assumption — design as if jammed for resilience even though it usually isn't
 
-If intermittent: roughly what fraction of mission time can we assume some backhaul works?
+If intermittent: roughly what fraction of friendly FPV feeds reach the EW team's receiver in a typical mission? This shapes the dashboard's "missing feed" semantics — do we show the feed-list with gaps, or assume every friendly drone's feed eventually arrives?
 
-## 3. On-drone compute reality
+## 2. Receiver-side compute reality
 
-What compute does a typical *cheap, mass-produced* friendly FPV drone realistically carry today?
+Now that we're locked on ground-side reading by an EW team:
 
-- Flight-controller class only (Betaflight, no spare cycles)
-- Tiny microcontroller assist (ESP32-class, ~$5–25)
-- Small companion compute (Pi Zero 2 W / Coral USB / Jetson Nano, ~$25–70)
-- Heavier (Jetson Orin Nano-class, $100+)
-
-Specifically: could a friendly drone realistically run a small visual classifier (e.g. YOLOv8n quantized at low resolution) onboard, or is that already too much weight / power / cost for disposable FPV?
-
-## 4. Decision authority
-
-When BlueMark says "this is friendly" or "this is foe", who is the *consumer* of that decision?
-
-- The drone itself, taking immediate autonomous action
-- A pilot (human) seeing it on goggles / control station
-- An EW commander on the ground when comms allow
-- A mesh of friendly drones coordinating
-
-This affects our safety-boundary language. We've been writing "identification aid only, human decides" assuming a human in the loop — if the drone consumes the output, the framing has to change (or the architecture has to keep a human somewhere).
+- What's the realistic compute envelope for the receiver — laptop, ruggedized Pi, milspec rig?
+- Any constraints on resolution / latency / battery / power?
+- Is there specific hardware we should target for the demo so the pitch lands as realistic, not academic?
 
 ---
 
-Reply in `team/birger/changelog.md` or however works. Whatever you can answer fast unblocks NICK-008 and downstream work.
+That's it. The full SME questionnaire (12 questions, with post-lock relevance flags) is still in `team/nicholas/meeting_2026-05-02.md` and can be answered async. These two unblock NICK-008 architecture lock.

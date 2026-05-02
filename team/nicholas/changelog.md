@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Nicholas's agent writes here.
 
+### 2026-05-03 02:00 - Nicholas (via Claude Code)
+
+- Changed: Captured Birger's preliminary SME answers and clarified the scope confusion he flagged on Q2. Updated `birger_urgent_questions.md` with answers inline + a scope clarifier (BlueMark adds compute to neither the airframe nor the FPV camera stack — only to the ground receiver). Added a "Birger SME preliminary answers" section to `meeting_2026-05-02.md`. Memory updated.
+- Files: `team/nicholas/birger_urgent_questions.md`, `team/nicholas/meeting_2026-05-02.md`, `team/nicholas/changelog.md`, memory `project_bluemark.md`.
+- Why: Two big takeaways. (1) **Operational fact** — *all friendly video feeds are already watermarked today; DJI feeds interleave encoding.* This reshapes the pitch: we're a *cryptographic upgrade to a deployed practice*, not a category-creator. (2) ~50% feed throughput is realistic — the dashboard should eventually handle missing feeds gracefully, but it's stretch polish, not MVP-blocking.
+- Assumptions: Birger's "intermittent, ~50%" is a rough operational estimate, not a contracted value — fine for pitch language ("partial feed availability is operationally expected"). The watermark fact dramatically strengthens the pitch but does not change architecture; the HMAC marker remains additive on top of existing video-encoding/watermarking layers.
+- Open questions: None blocking. Sebastian could optionally weave the "we're upgrading existing watermarking practice" framing into pitch slides — surfaced as an ASK.
+- Next step: **Tell Sebastian about the watermark insight for the pitch.** Demo rehearsal still pending. NICK-004 risk register still open.
+
 ### 2026-05-03 01:15 - Nicholas (via Claude Code)
 
 - Changed: ML re-incorporated as **off-the-shelf pretrained** (no fine-tuning). Recommended weights: `doguilmak/Drone-Detection-YOLOv8x` from HuggingFace, exported to ONNX, CPU inference. Scaffolded `scripts/run_visual_classifier.py` for Sebastian — currently emits simulated values; he plugs the real ONNX call into `run_real_inference()`. Integration via `demo_assets/visual_profile_overrides.json`; `scripts/generate_feeds.py` now reads that file when present and prefers it over the inline simulated defaults. `pyproject.toml` adds an `[ml]` extras group (onnxruntime, ultralytics, pillow) so deps stay opt-in. `docs/fusion_architecture.md` updated to document the visual-classifier path. Added Q13 (Pi/Ukraine availability — actually added this push) and Q14 (which Ukrainian friendly drone visual types matter most for `known_friendly_*` mapping) to the full SME questionnaire. Urgent Birger doc unchanged — no re-ping needed.

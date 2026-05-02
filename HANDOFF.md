@@ -9,7 +9,16 @@ Use this file to keep the team coordinated during the hackathon.
 - Team work allocation and assistant suggestions added.
 - Placeholder team names corrected to actual teammate names.
 - Concrete demo plan added.
+- Cross-agent context sync workflow manually adopted for this clone.
 - No implementation started.
+
+### 2026-05-02 14:18 - Codex
+
+- Changed: Added Codex post-pull instructions, created missing teammate changelogs, and enabled local `.githooks` with `git config core.hooksPath .githooks`.
+- Files: `AGENTS.md`, `HANDOFF.md`, `team/sebastian/changelog.md`, `team/arpit/changelog.md`, `team/birger/changelog.md`
+- Assumptions: `CONTEXT.md`, `CLAUDE.md`, `.githooks/post-merge`, `.githooks/post-checkout`, and `team/nicholas/changelog.md` came from the previous pull and should remain as-is.
+- Open questions: None.
+- Next step: Tell teammates to run `git config core.hooksPath .githooks` once after pulling and to have their agents read `CONTEXT.md` plus all changelogs.
 
 ### 2026-05-02 21:08 - Nicholas
 

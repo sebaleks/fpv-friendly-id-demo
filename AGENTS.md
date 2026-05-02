@@ -21,6 +21,7 @@ Keep all work framed around simulated video, benign identification, operator war
 ## Team Work Boundaries
 
 - Keep shared project docs concise and practical.
+- After every `git pull`, agents must read `CONTEXT.md` and every `team/*/changelog.md` before continuing work.
 - Read `team/work_allocation.md` before taking on teammate-scoped work.
 - Do not edit another person's team area without checking their notes first.
 - Before editing `team/<name>/`, read `team/<name>/suggestions.md` if it exists.
@@ -47,3 +48,5 @@ When making meaningful changes, update `HANDOFF.md` with:
 - Files touched.
 - Any assumptions or open questions.
 - Suggested next step.
+
+For teammate-specific work, append a short entry to `team/<your-name>/changelog.md` using the format in `CONTEXT.md`.

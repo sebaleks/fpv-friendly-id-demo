@@ -31,10 +31,26 @@ def _signals(marker_ev: dict, *, fresh: bool, mission_ok: bool, visual=None, rc=
     return signals
 
 
+def _load_visual_overrides() -> dict[str, dict]:
+    """Read demo_assets/visual_profile_overrides.json if scripts/run_visual_classifier.py
+    has produced it. Empty dict means use simulated defaults inline below."""
+    path = ROOT / "demo_assets" / "visual_profile_overrides.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return {}
+
+
 def main() -> None:
     manifest = json.loads((ROOT / "demo_assets" / "mission_manifest.json").read_text())
     mission_id = manifest["mission_id"]
     now = int(time.time())
+    visual_overrides = _load_visual_overrides()
+
+    def visual_for(feed_id: str, default: dict | None) -> dict | None:
+        return visual_overrides.get(feed_id, default)
 
     feeds = []
 
@@ -42,7 +58,7 @@ def main() -> None:
     ev_a = verify_marker(SECRET, make_marker(SECRET, mission_id, ts=now), now=now)
     feeds.append(fuse_signals("FEED-A", _signals(
         ev_a, fresh=True, mission_ok=True,
-        visual={"score": 0.92, "label": "known_friendly_fpv"},
+        visual=visual_for("FEED-A", {"score": 0.92, "label": "known_friendly_fpv"}),
         rc=0.95,
     )))
 

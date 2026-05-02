@@ -82,9 +82,17 @@ Every state surfaces `Identification aid only. Human decision required.` The das
 - No risk-zone modulation (dropped from MVP; see `team/nicholas/meeting_2026-05-02.md` for history).
 - No drone-side decision-making — all fusion runs receiver-side.
 
+## Visual classifier — pretrained ONNX (no fine-tuning)
+
+`visual_profile` accepts a real model's output via `scripts/run_visual_classifier.py`. The recommended path is **off-the-shelf** [`doguilmak/Drone-Detection-YOLOv8x`](https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x) exported to ONNX via Ultralytics, run on CPU with `onnxruntime`. No training, no labeled dataset, no GPU required.
+
+The script writes `demo_assets/visual_profile_overrides.json` (one entry per feed). `scripts/generate_feeds.py` prefers that file over simulated values when present. If the script is not run, simulated values are used and the demo flow is unchanged.
+
+**Mapping convention.** A pretrained drone-detection YOLO labels every drone as just "drone." We map detections to `unknown_drone_like` by default; the `known_friendly_*` labels come from a hand-curated `demo_assets/friendly_overrides.json` (per-feed) that says "in this clip the drone authenticated by the marker is FPV-class." This is honest — the HMAC marker is the authoritative friendly signal; the visual classifier is supporting evidence, allowed to be coarse.
+
 ## Future extensions (pitch only)
 
-- Real ML for `visual_profile` (YOLOv8n / v11n / MobileNet) trained on `known_friendly_*` labels.
+- Fine-tuning a YOLO classifier on `known_friendly_*` labels with a real curated dataset (Sebastian has GPU access) — strictly stretch.
 - Audio cue (acoustic spectral signature) as additional supporting signal when available.
 - Seismic / RF cues as future passive corroboration.
 - Mesh / drone-to-drone marker exchange when comms permit.

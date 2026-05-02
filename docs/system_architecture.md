@@ -4,6 +4,8 @@
 
 Build a compact hackathon demo that simulates friendly FPV identification in degraded video.
 
+Cost framing lives in `docs/cost_tiers.md`. The preferred demo and pitch direction is Tier 0: pure software with near-zero marginal drone cost, with hardware assist only as a fallback.
+
 ## Planned Components
 
 - Simulated FPV video source.

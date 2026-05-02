@@ -10,7 +10,25 @@ Use this file to keep the team coordinated during the hackathon.
 - Placeholder team names corrected to actual teammate names.
 - Concrete demo plan added.
 - Cross-agent context sync workflow manually adopted for this clone.
+- Sebastian demo planning docs added.
+- Cost tier framing added.
 - No implementation started.
+
+### 2026-05-02 15:01 - Codex
+
+- Changed: Added per-drone cost tier framing and linked it from system architecture.
+- Files: `docs/cost_tiers.md`, `docs/system_architecture.md`, `HANDOFF.md`, `team/sebastian/changelog.md`
+- Assumptions: The hackathon pitch should lead with Tier 0 pure software and treat hardware as fallback.
+- Open questions: None.
+- Next step: Use `docs/cost_tiers.md` in pitch materials and architecture discussion.
+
+### 2026-05-02 14:25 - Codex
+
+- Changed: Added Sebastian-owned demo planning docs for plan, script, acceptance checklist, and dashboard state definitions.
+- Files: `docs/demo_plan.md`, `docs/demo_script.md`, `docs/acceptance_checklist.md`, `docs/dashboard_states.md`, `HANDOFF.md`, `team/sebastian/changelog.md`
+- Assumptions: Detector output may be live or scripted for fallback, but the operator workflow must remain identical.
+- Open questions: None.
+- Next step: Arpit should read `docs/dashboard_states.md` before dashboard work; Nicholas should read `docs/acceptance_checklist.md` before detector work.
 
 ### 2026-05-02 14:18 - Codex
 

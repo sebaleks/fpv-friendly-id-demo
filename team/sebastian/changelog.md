@@ -2,6 +2,24 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-02 15:01 - Sebastian (via Codex)
+
+- Changed: Added per-drone cost tiers and linked the software-first cost framing from system architecture.
+- Files: `docs/cost_tiers.md`, `docs/system_architecture.md`, `HANDOFF.md`, `team/sebastian/changelog.md`
+- Why: The pitch needs a clear scaling story that leads with Tier 0 near-zero marginal drone cost.
+- Assumptions: Hardware tiers are future integration paths, not implementation tasks for the hackathon MVP.
+- Open questions: None.
+- Next step: Reference `docs/cost_tiers.md` when preparing slides or judge answers.
+
+### 2026-05-02 14:25 - Sebastian (via Codex)
+
+- Changed: Created concise Sebastian-owned demo planning docs: demo plan, live narration, acceptance checklist, and dashboard state definitions.
+- Files: `docs/demo_plan.md`, `docs/demo_script.md`, `docs/acceptance_checklist.md`, `docs/dashboard_states.md`, `HANDOFF.md`, `team/sebastian/changelog.md`
+- Why: The team needs concrete MVP acceptance criteria and a shared live-demo story before implementation.
+- Assumptions: Scripted detector output is acceptable as a fallback if live detection fails.
+- Open questions: None.
+- Next step: Arpit aligns dashboard UI to `docs/dashboard_states.md`; Nicholas aligns detector outputs to `docs/acceptance_checklist.md`.
+
 ### 2026-05-02 14:21 - Sebastian (via Codex)
 
 - Changed: Expanded Sebastian's assistant instructions with integrator role, MVP focus, dashboard state definitions, live-demo checklist expectations, and fallback-demo ownership.

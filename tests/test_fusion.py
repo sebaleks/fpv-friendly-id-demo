@@ -60,7 +60,8 @@ def test_verify_marker_corrupted_undecodable():
     assert ev["decoded"] is False
 
 
-# Fusion tests — one per state
+# Fusion tests — one per state. NICK-026: assert signals_used contents,
+# not just state, to prevent silent attribution regressions.
 
 def test_state_friendly_verified():
     now = int(time.time())
@@ -73,6 +74,8 @@ def test_state_friendly_verified():
     assert "visual_classifier" in r.signals_used  # uses TS stateMeta vocabulary
     assert "firmware_marker" in r.signals_used
     assert "hmac_verify" in r.signals_used
+    assert "manifest_match" in r.signals_used
+    assert "time_window" in r.signals_used
 
 
 def test_state_likely_friendly_when_no_supporting():
@@ -82,6 +85,28 @@ def test_state_likely_friendly_when_no_supporting():
     r = fuse_signals("FEED-B", signals)
     assert r.state is FusionState.LIKELY_FRIENDLY
     assert 0.55 <= r.confidence < 0.85
+    # Marker layer fully fired but no supporting signals.
+    assert set(r.signals_used) == {
+        "firmware_marker", "steg_iff_token", "hmac_verify",
+        "time_window", "manifest_match",
+    }
+
+
+def test_state_likely_friendly_via_marker_evidence_fresh():
+    """NICK-024 regression test: marker carries evidence['fresh']=True and
+    time_window signal is omitted; should still reach LIKELY_FRIENDLY (or
+    FRIENDLY_VERIFIED with supporting), not silently fall to UNKNOWN."""
+    now = int(time.time())
+    ev = verify_marker(SECRET, make_marker(SECRET, MISSION, ts=now), now=now)
+    # Construct signals without an explicit `time_window` entry — only marker
+    # + mission_match. fresh-ness must come from marker.evidence.
+    signals = [
+        FusionSignal(name="marker", score=1.0, evidence=ev),
+        FusionSignal(name="mission_match", score=1.0),
+    ]
+    r = fuse_signals("FEED-X", signals)
+    assert r.state is FusionState.LIKELY_FRIENDLY
+    assert "firmware_marker" in r.signals_used
 
 
 def test_state_unknown_needs_review_when_no_marker():
@@ -93,6 +118,7 @@ def test_state_unknown_needs_review_when_no_marker():
     assert r.state is FusionState.UNKNOWN_NEEDS_REVIEW
     assert r.confidence < 0.4
     assert "foe" not in r.reason.lower() or "not foe" in r.reason.lower()
+    assert r.signals_used == []
 
 
 def test_state_signature_corrupted():
@@ -100,6 +126,11 @@ def test_state_signature_corrupted():
     signals = _signals_from_marker(ev, fresh=False, mission_ok=False)
     r = fuse_signals("FEED-D", signals)
     assert r.state is FusionState.SIGNATURE_CORRUPTED
+    # NICK-026: bytes were extractable but couldn't be decoded — emit the
+    # *_partial failure variant so the dashboard signal trace shows
+    # PRESENT-BUT-BAD rather than MISSING.
+    assert "firmware_marker" in r.signals_used
+    assert "steg_iff_token_partial" in r.signals_used
 
 
 def test_state_possible_spoof_bad_hmac():
@@ -110,6 +141,9 @@ def test_state_possible_spoof_bad_hmac():
     signals = _signals_from_marker(ev, fresh=True, mission_ok=True)
     r = fuse_signals("FEED-E", signals)
     assert r.state is FusionState.POSSIBLE_SPOOF
+    # NICK-026: marker bytes existed but verification failed → emit *_mismatch.
+    assert "firmware_marker_mismatch" in r.signals_used
+    assert "steg_iff_token" in r.signals_used
 
 
 def test_state_possible_spoof_stale_marker():
@@ -120,12 +154,29 @@ def test_state_possible_spoof_stale_marker():
     assert r.state is FusionState.POSSIBLE_SPOOF
 
 
+def test_state_possible_spoof_when_freshness_signal_absent_and_marker_stale():
+    """NICK-025 regression: marker decoded with HMAC valid but stale (per
+    marker evidence), and no explicit time_window signal supplied. Previously
+    this fell through to UNKNOWN; should now flag as POSSIBLE_SPOOF (replay)."""
+    now = int(time.time())
+    ev = verify_marker(SECRET, make_marker(SECRET, MISSION, ts=now - 60), now=now, window_s=10)
+    # Construct signals WITHOUT a time_window entry — only marker + mission_match.
+    signals = [
+        FusionSignal(name="marker", score=1.0, evidence=ev),
+        FusionSignal(name="mission_match", score=1.0),
+    ]
+    r = fuse_signals("FEED-Y", signals)
+    assert r.state is FusionState.POSSIBLE_SPOOF
+
+
 def test_state_possible_spoof_mission_mismatch():
     now = int(time.time())
     ev = verify_marker(SECRET, make_marker(SECRET, "WRONG-MISSION", ts=now), now=now)
     signals = _signals_from_marker(ev, fresh=True, mission_ok=False)
     r = fuse_signals("FEED-G", signals)
     assert r.state is FusionState.POSSIBLE_SPOOF
+    # NICK-026: mission failure variant must surface in signals_used.
+    assert "manifest_miss" in r.signals_used
 
 
 def test_safety_no_foe_label_in_reasons():

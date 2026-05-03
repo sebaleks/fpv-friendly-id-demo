@@ -1,6 +1,6 @@
 # BlueMark FPV
 
-**Edge-on-edge software-only IFF for cheap analog FPV drones.** A lightweight watermark-generation-and-detection system for the most common and numerous low-end analog drones and EW receptors with low-to-moderate compute availability. Marker generation runs on the drone's existing flight controller (Betaflight FC, STM32-class); detection runs on a backpack-portable receiver (Pi + USB capture card, or a laptop / EW scanner). No cloud, no central server, no added drone hardware.
+**Edge-on-edge software-only IFF for cheap analog FPV drones.** *(Production design — hackathon demo simulates the analog video pipeline; the cryptographic + fusion + dashboard logic is real and tested.)* A lightweight watermark-generation-and-detection system for the most common and numerous low-end analog drones and EW receptors with low-to-moderate compute availability. In production: marker generation would run on the drone's existing flight controller (Betaflight FC, STM32-class); detection runs on a backpack-portable receiver (Pi + USB capture card, or a laptop / EW scanner). No cloud, no central server, no added drone hardware.
 
 Submitted to: **Natsec Hackathon — Problem Statement 2 (Edge Deployments and Drone Operation).**
 
@@ -62,7 +62,8 @@ Optional, for Sebastian's ML track:
 ```bash
 pip install -e ".[ml]"                          # onnxruntime + ultralytics + pillow
 python scripts/run_visual_classifier.py         # writes demo_assets/visual_profile_overrides.json
-                                                # (currently emits simulated values; real ONNX hookup is a TODO)
+                                                # ships real ONNX inference; deliberately not invoked
+                                                # on the demo path per NICK-015 — see docs/judge_faq.md Q6
 python scripts/generate_feeds.py                # regenerates feeds.json with real visual scores
 ```
 

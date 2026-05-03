@@ -32,7 +32,7 @@
 - [x] FEED-C resolves to `UNKNOWN_NEEDS_REVIEW`.
 - [x] FEED-D resolves to `SIGNATURE_CORRUPTED`.
 - [x] FEED-E resolves to `POSSIBLE_SPOOF`.
-- [x] Scripted fallback results are ready (`scripts/generate_feeds.py` is the scripted path; live detector path is identical shape).
+- [x] Scripted detector path **is** the demo path — `scripts/generate_feeds.py` produces `dashboard/public/feeds.json`, dashboard reads it; there is no separate live detector. If `feeds.json` is missing/corrupted at demo time, recovery is one command (`python scripts/generate_feeds.py`) or restore from git (`git checkout HEAD -- dashboard/public/feeds.json`). See `docs/demo_plan.md` §"Fallback Plan If Live Detection Fails".
 - [x] pytest 12/12 passing.
 
 ## Dashboard
@@ -61,7 +61,7 @@
 
 - [ ] MVP runs without Raspberry Pi AI Camera (receiver-side AI on a laptop is sufficient).
 - [ ] Optional hardware tiers stay under their stated cost constraint (`docs/cost_tiers.md`).
-- [ ] No claim that Tier 3 hardware is procurable on the Ukrainian front without verification (Birger SME question pending).
+- [x] No claim that Tier 3 hardware is procurable on the Ukrainian front without verification — Birger Q3 (`team/nicholas/birger_responses_2026-05-03.md`) confirmed: receivers are EW scanners with sufficient compute; the dashboard pitch targets laptop-class hardware that EW teams already carry. Pi/Pi-AI-Camera availability is tracked separately as NICK-006 Q13.
 
 ## Live Demo Fallback
 

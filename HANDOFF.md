@@ -11,11 +11,13 @@ Use this file to keep the team coordinated during the hackathon.
 - ✅ Sebastian demo planning docs done (`docs/demo_plan.md`, `demo_script.md`, `acceptance_checklist.md`, `dashboard_states.md`, `cost_tiers.md`).
 - ✅ Architecture locks: Problem A (drone marks own video, ground EW reads, human decides), human-in-loop hard event constraint, 5-state taxonomy, risk-zone dropped.
 - ✅ **Implementation shipped:** Python core (`src/bluemark/` — HMAC marker + 5-state fusion + Pydantic schemas); React + Vite + TS dashboard (`dashboard/`); pytest 12/12 passing; `feeds.json` covers all 5 states.
-- ✅ ML scope locked: off-the-shelf pretrained YOLO via ONNX (no fine-tuning); stub at `scripts/run_visual_classifier.py` for Sebastian; demo runs without model loaded.
+- ✅ ML model side: real ONNX YOLOv8n inference shipped (Sebastian, `scripts/run_visual_classifier.py`, ~24ms CPU); **deliberately cut from the live demo path** per NICK-015 (Birger Q2: no classifier needed; safety invariant gates known_friendly_*; no real-FPV evals). Code stays as Q&A ammunition (`docs/judge_faq.md` Q6).
 - ✅ **Steganographic framing adopted** (per Sebastian's "Steganographic IFF FPV" concept doc): production marker embeds in VBI lines 17–20 of NTSC analog video; demo simulates the receiver-side read via `feeds.json`. See `docs/steganographic_iff.md`.
 - ✅ Birger SME questions: all answered as of 2026-05-03 — see `team/nicholas/birger_responses_2026-05-03.md`. **Pitch corrected:** earlier "deployed friendly watermarks" framing was based on the concept paper, not field observation. New (stronger) framing: VBI encoding + covert watermarking + cryptographic IFF are decades-old proven prior art; the *combination* on live FPV analog video, on a flight controller, for real-time IFF at zero hardware cost is novel.
-- ⏳ Pitch slides: Sebastian-owned, in flight.
+- ✅ **Dashboard v3 (Arpit):** liquid-glass split-pane with Mission Control nav, signal-trace UI (PASS/FAIL/MISSING per signal), tactical map, mission overview with declared-friendlies + state distribution + recent transitions. Full vocabulary alignment with Python signal names (commit `3c41940`).
+- ✅ **52-task QA swarm filed in PF (NICK-016..NICK-067):** P0 wave (NICK-016..NICK-023) closed; P1 wave in flight; P2 wave queued. Pitch slides intentionally **dropped** in favor of slide-free 3-min demo walk (Sebastian).
 - ⏳ Demo rehearsal: not yet run end-to-end.
+- ⏳ NICK-015 (real FPV frames + YOLO evals): post-hackathon polish, deadline 2026-05-10.
 
 ### 2026-05-02 15:01 - Codex
 

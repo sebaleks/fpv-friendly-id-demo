@@ -19,7 +19,7 @@ Team assistant folders:
 - **Current state (2026-05-03):**
   - ✅ Demo planning docs (`docs/demo_plan.md`, `demo_script.md`, `acceptance_checklist.md`, `dashboard_states.md`).
   - ✅ Cost-tier framing (`docs/cost_tiers.md`).
-  - ⏳ Pitch slides reflecting the steganographic / VBI framing (see `docs/steganographic_iff.md`) and the watermark-as-deployed-practice insight from Birger.
+  - ✅ Pitch slides intentionally **dropped** in favor of a slide-free 3-min demo walk (per Sebastian's 2026-05-03 changelog entry; see `docs/demo_script.md`).
   - ⏳ Optional ML stretch: wire real ONNX inference into `scripts/run_visual_classifier.py` (recommended: pretrained `doguilmak/Drone-Detection-YOLOv8x`). Demo runs without this — simulated values fall through.
   - ⏳ End-to-end demo rehearsal.
 

@@ -1,7 +1,7 @@
 {
   "mission_id": "MISSION-2026-05-02-A",
-  "valid_from_unix": 1777826370,
-  "valid_until_unix": 1777869570,
+  "valid_from_unix": 1777827216,
+  "valid_until_unix": 1777870416,
   "friendly_drone_ids": [
     "FEED-A",
     "FEED-B",

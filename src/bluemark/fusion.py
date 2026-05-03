@@ -31,15 +31,26 @@ def fuse_signals(feed_id: str, signals: list[FusionSignal]) -> FusionResult:
     marker_extracted = bool(marker and marker.evidence.get("extracted"))
     marker_decoded = bool(marker and marker.evidence.get("decoded"))
     hmac_valid = bool(marker and marker.evidence.get("hmac_valid"))
-    fresh = bool(time_window and time_window.fresh)
+    # NICK-024: freshness can come from either an explicit `time_window` signal
+    # OR the marker's own `evidence["fresh"]` (set by verify_marker). A
+    # fully-valid HMAC marker without a separate time_window signal still
+    # carries a freshness verdict; ignoring it would silently downgrade.
+    fresh = bool(
+        (time_window and time_window.fresh)
+        or (marker and marker.evidence.get("fresh"))
+    )
     mission_ok = bool(mission_match and mission_match.score >= 0.5)
 
     used: list[str] = []
 
     # 1. POSSIBLE_SPOOF: marker decoded, but at least one verification check failed.
+    # NICK-025: missing time_window/mission_match signals previously fell through
+    # to UNKNOWN; a marker decoded with HMAC valid but failing freshness (regardless
+    # of which fresh source — explicit signal or marker evidence) is a replay
+    # attempt and should be flagged as SPOOF, not silently dropped.
     if marker_decoded and (
         not hmac_valid
-        or (time_window is not None and not fresh)
+        or not fresh
         or (mission_match is not None and not mission_ok)
     ):
         # Marker bytes existed but verification failed → emit the *_mismatch variant

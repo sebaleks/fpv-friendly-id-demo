@@ -66,7 +66,9 @@ export default function MissionOverview({ feeds, manifest, generatedAt, onPick }
           {STATE_ORDER.map((s) => {
             const n = dist[s] || 0;
             if (!n) return null;
-            return <div key={s} className={`mo-distseg mo-seg-${s.toLowerCase()}`} style={{ width: `${(n / total) * 100}%` }} title={`${STATE_LABEL[s]} · ${n}`} />;
+            // NICK-044: guard divide-by-zero when feeds list is empty
+            const pct = total > 0 ? (n / total) * 100 : 0;
+            return <div key={s} className={`mo-distseg mo-seg-${s.toLowerCase()}`} style={{ width: `${pct}%` }} title={`${STATE_LABEL[s]} · ${n}`} />;
           })}
         </div>
         <div className="mo-distlegend">

@@ -95,16 +95,45 @@ def _load_friendly_overrides() -> dict[str, dict[str, str]]:
     return data.get("overrides", {})
 
 
+# NICK-029: explicit allow-list for visual_profile labels. Belt-and-suspenders
+# alongside the data-flow safety invariant.
+ALLOWED_LABELS = frozenset({
+    "known_friendly_fpv",
+    "known_friendly_fixedwing",
+    "known_friendly_mavic_style",
+    "unknown_drone_like",
+    "background_or_noise",
+})
+
+
 def _resolve_label(feed_id: str, yolo_label: str, friendly: dict[str, dict[str, str]]) -> tuple[str, str]:
     """Return (final_label, rationale).
 
     SAFETY-CRITICAL: never derive a known_friendly_* label from YOLO output.
     Only the hand-labeled friendly_overrides.json may promote a feed to a
     known_friendly_* class.
+
+    NICK-029: enforce two assertions — (a) hand-label values must be in the
+    controlled vocab so a typo doesn't propagate to the dashboard, and (b) the
+    YOLO label can never start with "known_friendly_" so the safety invariant
+    is enforced at runtime, not just by data flow.
     """
     if feed_id in friendly:
         entry = friendly[feed_id]
-        return entry["label"], f"hand-label override: {entry.get('rationale', 'no rationale provided')}"
+        label = entry["label"]
+        assert label in ALLOWED_LABELS, (
+            f"Hand-label '{label}' for {feed_id} is not in the controlled "
+            f"vocabulary {sorted(ALLOWED_LABELS)}; check demo_assets/friendly_overrides.json"
+        )
+        return label, f"hand-label override: {entry.get('rationale', 'no rationale provided')}"
+    assert not yolo_label.startswith("known_friendly_"), (
+        f"YOLO produced disallowed friendly label '{yolo_label}' for {feed_id}; "
+        "only hand-labels can promote a feed to known_friendly_*"
+    )
+    assert yolo_label in ALLOWED_LABELS, (
+        f"YOLO label '{yolo_label}' for {feed_id} is not in the controlled "
+        f"vocabulary {sorted(ALLOWED_LABELS)}"
+    )
     return yolo_label, "from pretrained YOLO inference; no hand-label override present"
 
 

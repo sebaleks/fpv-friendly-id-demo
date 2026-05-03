@@ -28,7 +28,18 @@ export default function App() {
       .catch(() => setManifest(null));
   }, []);
 
-  if (error) return <div className="app-error">Failed to load feeds.json — {error}. Run <code>python scripts/generate_feeds.py</code>.</div>;
+  if (error) {
+    // NICK-047: distinguish 404 (likely missing file) from parse / network errors.
+    const isMissing = /HTTP 404/.test(error);
+    return (
+      <div className="app-error">
+        Failed to load feeds.json — {error}.
+        {isMissing
+          ? <> Run <code>python scripts/generate_feeds.py</code> to regenerate.</>
+          : <> Check the dev server output and the <code>dashboard/public/feeds.json</code> contents.</>}
+      </div>
+    );
+  }
   if (!bundle) return <div className="app-loading">Loading feeds…</div>;
 
   const sorted = sortFeeds(bundle.feeds, sort) as FusionResult[];

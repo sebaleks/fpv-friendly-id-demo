@@ -14,6 +14,11 @@ export interface FusionResult {
   confidence: number;
   signals_used: string[];
   reason: string;
+  // Optional spatial / display fields used by the dashboard. Backend may
+  // omit these; UI degrades gracefully.
+  callsign?: string;
+  grid?: string;
+  last_seen_s?: number;
 }
 
 export interface FeedsBundle {

@@ -4,7 +4,7 @@ import StateGlyph from "./StateGlyph";
 import VideoTile from "./VideoTile";
 
 interface Props {
-  feed: FusionResult & { last_seen_s?: number; callsign?: string; grid?: string };
+  feed: FusionResult;
   selected: boolean;
   onClick: () => void;
   showVideo: boolean;

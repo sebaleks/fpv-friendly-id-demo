@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 // Stable hash → deterministic visual placeholder per feed (fallback only).
 function feedHash(id: string): number {
@@ -30,6 +30,21 @@ export default function VideoTile({ feed, accent = "#a3a39a", showReticle = fals
   const src = videoSrcFor(feed.feed_id);
   const [videoBroken, setVideoBroken] = useState(false);
   const showVideo = src && !videoBroken;
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Click on the video → request native fullscreen on the video element.
+  // Stops propagation so the surrounding list-item button doesn't also
+  // toggle feed selection.
+  const onVideoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      v.requestFullscreen?.().catch(() => {});
+    }
+  };
 
   return (
     <div
@@ -43,6 +58,7 @@ export default function VideoTile({ feed, accent = "#a3a39a", showReticle = fals
     >
       {showVideo && (
         <video
+          ref={videoRef}
           src={src!}
           autoPlay
           loop
@@ -50,21 +66,23 @@ export default function VideoTile({ feed, accent = "#a3a39a", showReticle = fals
           playsInline
           preload="auto"
           onError={() => setVideoBroken(true)}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          onClick={onVideoClick}
+          title="Click to expand"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", cursor: "zoom-in" }}
         />
       )}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 0%, transparent 60%, rgba(0,0,0,0.5) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 0%, transparent 60%, rgba(0,0,0,0.5) 100%)", pointerEvents: "none" }} />
       {!showVideo && (
-        <div style={{ position: "absolute", left: 0, right: 0, top: `${(h % 80) + 10}%`, height: 1, background: "rgba(255,255,255,0.08)" }} />
+        <div style={{ position: "absolute", left: 0, right: 0, top: `${(h % 80) + 10}%`, height: 1, background: "rgba(255,255,255,0.08)", pointerEvents: "none" }} />
       )}
       {showReticle && (
         <div style={{
           position: "absolute", left: "50%", top: "50%", width: 24, height: 24,
-          transform: "translate(-50%,-50%)", border: `1px solid ${accent}`, borderRadius: "50%", opacity: 0.6,
+          transform: "translate(-50%,-50%)", border: `1px solid ${accent}`, borderRadius: "50%", opacity: 0.6, pointerEvents: "none",
         }} />
       )}
-      <div className="vt-callsign">{feed.feed_id}</div>
-      <div className="vt-status">{lastSeen === 0 ? "LIVE" : `T-${lastSeen}s`}</div>
+      <div className="vt-callsign" style={{ pointerEvents: "none" }}>{feed.feed_id}</div>
+      <div className="vt-status" style={{ pointerEvents: "none" }}>{lastSeen === 0 ? "LIVE" : `T-${lastSeen}s`}</div>
     </div>
   );
 }

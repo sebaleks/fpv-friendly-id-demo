@@ -23,11 +23,20 @@ function feedToMapXY(feed: FusionResult): [number, number] {
       return [clamp(x, 0.05, 0.95), clamp(y, 0.08, 0.92)];
     }
   }
-  // Deterministic fallback from feed_id hash
-  let h = 0;
-  for (let i = 0; i < feed.feed_id.length; i++) h = (h * 31 + feed.feed_id.charCodeAt(i)) | 0;
-  const x = ((Math.abs(h) % 1000) / 1000) * 0.9 + 0.05;
-  const y = ((Math.abs(h >> 10) % 1000) / 1000) * 0.84 + 0.08;
+  // Deterministic fallback: two independent FNV-1a hashes with different seeds,
+  // so feed_ids that differ by a single trailing char still scatter across the AO.
+  const fnv = (seed: number) => {
+    let h = seed >>> 0;
+    for (let i = 0; i < feed.feed_id.length; i++) {
+      h ^= feed.feed_id.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h;
+  };
+  const hx = fnv(0x811c9dc5);
+  const hy = fnv(0x9e3779b9);
+  const x = ((hx % 10000) / 10000) * 0.9 + 0.05;
+  const y = ((hy % 10000) / 10000) * 0.84 + 0.08;
   return [x, y];
 }
 

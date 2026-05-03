@@ -15,28 +15,34 @@ How BlueMark FPV combines multiple identification signals into one of the five d
 
 ## Pipeline
 
-```
-                  ┌────────────────┐
-   FPV frame ───▶ │ marker extract │ ─▶ marker bytes ─▶ HMAC verify ─▶ marker / time_window / mission_match
-                  └────────────────┘
-                          │
-                          ▼
-                  ┌────────────────┐
-                  │ visual classifier │ ─▶ visual_profile (score + label)
-                  └────────────────┘
-                          │
-                          ▼
-                  ┌────────────────┐
-   manifest ────▶ │ session lookup │ ─▶ rc_session (optional)
-                  └────────────────┘
-                          │
-                          ▼
-                  ┌────────────────┐
-                  │  fuse_signals  │ ─▶ FusionResult { state, confidence, signals_used, reason }
-                  └────────────────┘
-                          │
-                          ▼
-                    dashboard card
+```mermaid
+flowchart LR
+    FRAME([FPV frame])
+    MANIFEST([mission_manifest.json])
+    SESSION([session_log.json])
+
+    EXTRACT[marker extract]
+    HMAC[HMAC verify]
+    VISUAL[visual classifier<br/>rule-based or ONNX]
+    LOOKUP[session lookup]
+    FUSE[fuse_signals]
+    CARD([dashboard card])
+
+    FRAME --> EXTRACT --> HMAC
+    HMAC -- marker --> FUSE
+    HMAC -- time_window --> FUSE
+    HMAC -- mission_match --> FUSE
+    FRAME --> VISUAL
+    VISUAL -- visual_profile<br/>score + label --> FUSE
+    MANIFEST --> LOOKUP
+    SESSION --> LOOKUP
+    LOOKUP -- rc_session<br/>optional --> FUSE
+    FUSE -- FusionResult<br/>state · confidence<br/>signals_used · reason --> CARD
+
+    classDef io fill:#10141a,stroke:#4d8ff5,color:#e6ebf2;
+    classDef proc fill:#161b22,stroke:#262e3a,color:#e6ebf2;
+    class FRAME,MANIFEST,SESSION,CARD io;
+    class EXTRACT,HMAC,VISUAL,LOOKUP,FUSE proc;
 ```
 
 ## State mapping rules (v1, rule-based)

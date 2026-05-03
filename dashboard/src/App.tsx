@@ -85,7 +85,7 @@ export default function App() {
       </div>
 
       <footer className="app-foot">
-        <span>IDENTIFICATION AID ONLY · HUMAN DECISION REQUIRED · NOT PRODUCTION IFF</span>
+        <span className="app-foot-canonical">Identification aid only. Human decision required. Not production IFF.</span>
         <span className="app-foot-tweaks">
           <label><input type="checkbox" checked={showVideo} onChange={(e) => setShowVideo(e.target.checked)} /> video</label>
           <label>density:&nbsp;

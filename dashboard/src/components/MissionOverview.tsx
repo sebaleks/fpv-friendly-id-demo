@@ -23,6 +23,12 @@ function fmtCountdown(deltaS: number): string {
   return `T-${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+function evtTime(generatedAtUnix: number, offsetS: number): string {
+  const d = new Date((generatedAtUnix - offsetS) * 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 export default function MissionOverview({ feeds, manifest, generatedAt, onPick }: Props) {
   const total = feeds.length;
   const reviewCount = feeds.filter((f) => NEEDS_REVIEW.has(f.state)).length;
@@ -80,6 +86,8 @@ export default function MissionOverview({ feeds, manifest, generatedAt, onPick }
         </div>
       </div>
 
+      <div className="mo-warning" role="note">Identification aid only. Human decision required.</div>
+
       <div className="mo-cols">
         {manifest && (
           <div className="mo-section">
@@ -111,13 +119,12 @@ export default function MissionOverview({ feeds, manifest, generatedAt, onPick }
         <div className="mo-section">
           <SectionLabel>Recent state transitions</SectionLabel>
           <div className="mo-list">
-            {/* Synthetic — wire to real event log when available. */}
-            <Event t="14:32:07" id="FEED-ALPHA-12" msg="→ POSSIBLE_SPOOF"     tone="danger" onPick={onPick} />
-            <Event t="14:32:04" id="FPV-NICK-02"   msg="IFF token CRC fail"   tone="warn"   onPick={onPick} />
-            <Event t="14:31:58" id="FPV-ARPIT-02"  msg="→ LIKELY_FRIENDLY"    tone="ok"     onPick={onPick} />
-            <Event t="14:31:52" id="FEED-UNK-07"   msg="first contact"        tone="warn"   onPick={onPick} />
-            <Event t="14:31:45" id="FPV-SEB-01"    msg="→ FRIENDLY_VERIFIED"  tone="dim"    onPick={onPick} />
-            <Event t="14:31:39" id="FPV-NICK-01"   msg="→ FRIENDLY_VERIFIED"  tone="dim"    onPick={onPick} />
+            {/* Synthetic — wire to real event log when available. IDs are kept consistent with feeds.json so clicks resolve. */}
+            <Event t={evtTime(generatedAt, 12)} id="FEED-E" msg="→ POSSIBLE_SPOOF"     tone="danger" onPick={onPick} />
+            <Event t={evtTime(generatedAt, 30)} id="FEED-D" msg="HMAC decode failed"   tone="warn"   onPick={onPick} />
+            <Event t={evtTime(generatedAt, 48)} id="FEED-B" msg="→ LIKELY_FRIENDLY"    tone="ok"     onPick={onPick} />
+            <Event t={evtTime(generatedAt, 60)} id="FEED-C" msg="no marker observed"   tone="warn"   onPick={onPick} />
+            <Event t={evtTime(generatedAt, 95)} id="FEED-A" msg="→ FRIENDLY_VERIFIED"  tone="dim"    onPick={onPick} />
           </div>
         </div>
       </div>

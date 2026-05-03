@@ -39,7 +39,7 @@
 
 - [x] Five feed cards display at once (one per state: FRIENDLY_VERIFIED, LIKELY_FRIENDLY, UNKNOWN_NEEDS_REVIEW, SIGNATURE_CORRUPTED, POSSIBLE_SPOOF).
 - [x] Each feed shows state, confidence, and signals_used.
-- [x] Every state shows `Identification aid only. Human decision required.` (verified in `dashboard/src/App.tsx` + `FeedCard.tsx`).
+- [x] Every state shows `Identification aid only. Human decision required.` (verified in `dashboard/src/App.tsx` global footer + `dashboard/src/components/FeedDetail.tsx` + `dashboard/src/components/MissionOverview.tsx`; `FeedCard.tsx` was deleted in commit `9aea062` when the dashboard split-pane refactor landed).
 - [ ] Labels are readable from demo distance.
 - [x] No UI copy implies autonomous action.
 

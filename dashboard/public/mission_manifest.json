@@ -1,12 +1,13 @@
 {
   "mission_id": "MISSION-2026-05-02-A",
-  "valid_from_unix": 1746208800,
-  "valid_until_unix": 1746252000,
+  "valid_from_unix": 1777825196,
+  "valid_until_unix": 1777868396,
   "friendly_drone_ids": [
-    "FPV-NICK-01",
-    "FPV-NICK-02",
-    "FPV-ARPIT-01",
-    "FPV-SEB-01"
+    "FEED-A",
+    "FEED-B",
+    "FEED-C",
+    "FEED-D",
+    "FEED-E"
   ],
   "issued_by": "TEAM-BLUEMARK",
   "notes": "Hackathon demo manifest. Identification aid only; human decision required."

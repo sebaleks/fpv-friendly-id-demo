@@ -2,34 +2,36 @@
 
 ## Demo Goal
 
-Show that BlueMark FPV can help a human operator distinguish simulated friendly FPV feeds from unknown or corrupted feeds using an OSD-like authenticated marker.
+Show that BlueMark FPV can help a human operator distinguish simulated friendly FPV feeds across the full five-state taxonomy — verified, likely, unknown, corrupted, and possibly spoofed — using an HMAC-authenticated marker steganographically embedded in the analog video VBI lines.
 
 ## User Story
 
-As a friendly EW monitoring operator, I need a quick visual aid that tells me whether an incoming simulated FPV feed appears friendly, unknown, corrupted, or suspicious, so I can avoid accidental friendly disruption while still treating unknown feeds cautiously.
+As a friendly EW monitoring operator, I need a quick visual aid that tells me whether an incoming simulated FPV feed is `FRIENDLY_VERIFIED`, `LIKELY_FRIENDLY`, `UNKNOWN_NEEDS_REVIEW`, `SIGNATURE_CORRUPTED`, or `POSSIBLE_SPOOF`, so I can avoid accidental friendly disruption while still treating unverified feeds cautiously and never auto-engaging.
 
 ## Demo Scenario
 
-A friendly EW monitoring team sees multiple FPV-style video feeds in a contested environment. Cheap FPV drones often share similar analog video characteristics and usually lack expensive IFF hardware. BlueMark FPV adds a small authenticated marker to friendly simulated feeds and shows receiver-side classification in a human-in-the-loop dashboard.
+A friendly EW monitoring team sees multiple FPV-style video feeds in a contested environment. Cheap FPV drones often share similar analog video characteristics and usually lack expensive IFF hardware. BlueMark FPV adds an HMAC-authenticated marker (production: VBI-embedded) to friendly simulated feeds and shows receiver-side classification in a human-in-the-loop dashboard.
 
-## Three Demo Feeds (MVP — optional 4th for stretch)
+## Five Demo Feeds (one per state)
 
-1. Friendly signed feed: Valid HMAC marker, fresh timestamp, mission match → `FRIENDLY_VERIFIED`.
-2. Unsigned unknown feed: No valid marker → `UNKNOWN_NEEDS_REVIEW`. Note: unknown is *not* foe.
-3. Degraded/corrupted signed feed: Marker-like data present but too noisy to verify → `SIGNATURE_CORRUPTED`.
-4. **Stretch (optional 4th):** Marker-like overlay failing HMAC authentication → `POSSIBLE_SPOOF`. Or `LIKELY_FRIENDLY` (valid marker, missing mission match) if spoof feels too edgy for the demo.
+1. **FEED-A** — Valid HMAC marker, fresh timestamp, mission match, supporting signals corroborate → `FRIENDLY_VERIFIED`.
+2. **FEED-B** — Marker valid + fresh + mission match, but no corroborating supporting signal → `LIKELY_FRIENDLY` (load-bearing for minimum-false-friendly per Birger Q7).
+3. **FEED-C** — No marker observed → `UNKNOWN_NEEDS_REVIEW`. **Unknown is not foe.**
+4. **FEED-D** — Marker bytes present but undecodable (degraded analog) → `SIGNATURE_CORRUPTED`.
+5. **FEED-E** — Marker decoded but fails HMAC authentication → `POSSIBLE_SPOOF`.
 
 Dashboard is a React + Vite SPA reading a static `feeds.json` (written by `scripts/generate_feeds.py`). No live backend in the demo path.
 
 ## What the Audience Should See
 
-- Three (or four) FPV-style feed panels visible at once.
-- Feed A labeled `Friendly Verified`.
-- Feed B labeled `Unknown — Needs Review`.
-- Feed C labeled `Signature Corrupted / Needs Human Review`.
-- (Optional) Feed D labeled `Possible Spoof` or `Likely Friendly`.
+- Five FPV-style feed panels visible at once (sidebar list + detail view).
+- FEED-A labeled `Friendly Verified`.
+- FEED-B labeled `Likely Friendly` (deliberately *not* the same color as verified).
+- FEED-C labeled `Unknown — Needs Review`.
+- FEED-D labeled `Signature Corrupted / Needs Human Review`.
+- FEED-E labeled `Possible Spoof`.
 - Confidence percentage and `signals_used` breakdown shown for each feed.
-- Persistent warning: `Identification aid only. Human decision required.`
+- Persistent warning on every state and on the global footer: `Identification aid only. Human decision required.`
 - Presenter states this is simulated, non-lethal, runs receiver-side on a laptop, requires no drone-side AI hardware, and is not production-grade IFF.
 
 ## MVP Success Criteria
@@ -68,12 +70,18 @@ Dashboard is a React + Vite SPA reading a static `feeds.json` (written by `scrip
 
 ## Fallback Plan If Live Detection Fails
 
-Use scripted detector results while keeping the same dashboard workflow:
+In this MVP, **the scripted detector path *is* the demo path** — `scripts/generate_feeds.py` produces `dashboard/public/feeds.json`, and the React dashboard reads it. There is no live detector to lose. Per `team/nicholas/risk_register.md` §C, if `feeds.json` is missing or corrupted at demo time, recovery is one command:
 
-- Feed A: `Friendly Verified`, high confidence, good signal quality.
-- Feed B: `Unknown`, low marker confidence, moderate signal quality.
-- Feed C: `Signature Corrupted / Needs Human Review`, medium marker confidence, poor signal quality.
+```
+python scripts/generate_feeds.py
+```
 
-Presenter line: "The live detector is replaced here with recorded detector output so we can show the operator workflow."
+If even that fails, restore from the last known-good commit: `git checkout HEAD -- dashboard/public/feeds.json`. The five expected outputs:
 
-Fallback still succeeds if the audience understands the problem, the human review workflow, the safety boundary, and what production validation would require.
+- FEED-A: `Friendly Verified`, ~0.95 confidence.
+- FEED-B: `Likely Friendly`, ~0.65 confidence.
+- FEED-C: `Unknown — Needs Review`, ~0.20 confidence.
+- FEED-D: `Signature Corrupted`, ~0.40 confidence.
+- FEED-E: `Possible Spoof`, ~0.10 friendly confidence.
+
+Presenter line: "Every demo run is identical and deterministic — that's the design." Fallback still succeeds if the audience understands the problem, the human review workflow, the safety boundary, and what production validation would require.

@@ -6,7 +6,7 @@ Show a simulated FPV video feed and a receiver-side dashboard (React + Vite). Pr
 
 ## 2. Friendly Verified
 
-Feed A authenticates: valid HMAC + fresh timestamp + mission manifest match + supporting visual / RC signal. Dashboard shows `FRIENDLY_VERIFIED`, high confidence (~0.95), full signals breakdown. *"Don't jam — this is ours."*
+Feed A authenticates: valid HMAC + fresh timestamp + mission manifest match + supporting visual / RC signal. Dashboard shows `FRIENDLY_VERIFIED`, high confidence (~0.95), full signals breakdown. *"This feed authenticates as ours; the operator can deprioritize it for review."*
 
 ## 3. Likely Friendly (optional 4th-feed stretch)
 

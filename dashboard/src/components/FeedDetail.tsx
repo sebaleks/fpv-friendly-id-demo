@@ -9,15 +9,14 @@ interface Props {
   onClose: () => void;
 }
 
-// Known signal IDs — anything else falls through to a generic row.
+// Known signal IDs — must match the names emitted by `scripts/generate_feeds.py`
+// (which mirror `src/bluemark/schemas.py::FusionSignal`). Anything else falls through.
 const SIGNAL_LABELS: Record<string, { label: string; bad?: boolean }> = {
-  firmware_marker:           { label: "Firmware marker" },
-  firmware_marker_mismatch:  { label: "Firmware marker mismatch", bad: true },
-  steg_iff_token:            { label: "Steganographic IFF token" },
-  steg_iff_token_partial:    { label: "IFF token (partial / CRC fail)", bad: true },
-  manifest_match:            { label: "Manifest match" },
-  manifest_miss:             { label: "Manifest miss", bad: true },
-  visual_classifier:         { label: "Visual classifier" },
+  marker:          { label: "HMAC marker" },
+  time_window:     { label: "Freshness window" },
+  mission_match:   { label: "Mission manifest match" },
+  visual_profile:  { label: "Visual classifier (supporting)" },
+  rc_session:      { label: "RC / session metadata" },
 };
 
 export default function FeedDetail({ feed, showVideo, onClose }: Props) {
@@ -72,10 +71,7 @@ export default function FeedDetail({ feed, showVideo, onClose }: Props) {
         </div>
       </section>
 
-      <div className="fd-actions">
-        <button className="fd-btn fd-btn-secondary">Acknowledge</button>
-        <button className="fd-btn fd-btn-primary">Mark Reviewed</button>
-      </div>
+      <div className="fd-warning" role="note">Identification aid only. Human decision required.</div>
     </div>
   );
 }

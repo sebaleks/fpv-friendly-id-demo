@@ -49,6 +49,17 @@ def main() -> None:
     now = int(time.time())
     visual_overrides = _load_visual_overrides()
 
+    # NICK-018: Write a fresh manifest to dashboard/public/ with valid_until_unix
+    # 12h in the future relative to `now`, so the dashboard's countdown doesn't
+    # render EXPIRED on first paint. Source-of-truth fixture in demo_assets/
+    # is left untouched.
+    public_manifest = dict(manifest)
+    public_manifest["valid_from_unix"] = now
+    public_manifest["valid_until_unix"] = now + 12 * 3600
+    public_manifest_path = ROOT / "dashboard" / "public" / "mission_manifest.json"
+    public_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    public_manifest_path.write_text(json.dumps(public_manifest, indent=2) + "\n")
+
     def visual_for(feed_id: str, default: dict | None) -> dict | None:
         return visual_overrides.get(feed_id, default)
 

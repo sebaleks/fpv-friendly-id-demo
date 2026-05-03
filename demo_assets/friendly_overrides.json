@@ -1,0 +1,10 @@
+{
+  "_comment": "Hand-labeled mapping: feed_id -> visual_profile label, applied AFTER YOLO inference. Pretrained COCO YOLO cannot tell a friendly FPV from any drone; it can only emit unknown_drone_like / background_or_noise. Promotion to known_friendly_* MUST come from a human who has confirmed via the HMAC marker that the feed is authenticated friendly. The HMAC marker is the source of truth; the visual signal is supporting evidence only.",
+  "_label_vocab": ["known_friendly_fpv", "known_friendly_fixedwing", "known_friendly_mavic_style", "unknown_drone_like", "background_or_noise"],
+  "overrides": {
+    "FEED-A": {
+      "label": "known_friendly_fpv",
+      "rationale": "Marker-authenticated and operator-confirmed FPV-class via manual review of the live feed. Visual signal corroborates the HMAC verdict; it does not produce it."
+    }
+  }
+}

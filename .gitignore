@@ -16,3 +16,16 @@ node_modules/
 .idea/
 .vscode/
 *.swp
+
+# ML weights (downloaded on demand by scripts/run_visual_classifier.py)
+weights/
+
+# Demo sample frames (real FPV stills; do not commit binary footage).
+# placeholder.png is the only checked-in frame — see demo_assets/sample_frames/README.md
+demo_assets/sample_frames/*.jpg
+demo_assets/sample_frames/*.jpeg
+demo_assets/sample_frames/*.png
+!demo_assets/sample_frames/placeholder.png
+
+# Classifier output (regenerated each run)
+demo_assets/classifier_log.json

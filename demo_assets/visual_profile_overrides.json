@@ -1,22 +1,6 @@
 {
   "FEED-A": {
-    "score": 0.92,
+    "score": 0.726,
     "label": "known_friendly_fpv"
-  },
-  "FEED-B": {
-    "score": 0.55,
-    "label": "unknown_drone_like"
-  },
-  "FEED-C": {
-    "score": 0.0,
-    "label": "background_or_noise"
-  },
-  "FEED-D": {
-    "score": 0.3,
-    "label": "unknown_drone_like"
-  },
-  "FEED-E": {
-    "score": 0.61,
-    "label": "unknown_drone_like"
   }
 }

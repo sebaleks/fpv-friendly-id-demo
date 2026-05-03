@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 04:35 - Sebastian (via Claude Code)
+
+- Changed: Shipped the model side of T5 (real ONNX YOLOv8n integration). `scripts/run_visual_classifier.py` is now real: loads `weights/yolov8n.onnx` via onnxruntime CPU provider, runs per-feed inference on `demo_assets/sample_frames/<feed_id>.jpg`, writes `demo_assets/visual_profile_overrides.json` (existing contract, unchanged downstream) plus a new `demo_assets/classifier_log.json` (per-frame raw + final label + rationale + latency — the file Arpit's dashboard surface will read once he lands on a shape). 24 ms post-warmup inference on CPU. Graceful fallback when weights or frames missing. Safety invariant enforced in `_resolve_label()`: YOLO output **never** derives `known_friendly_*`; only the hand-labeled `demo_assets/friendly_overrides.json` may promote a feed to that label.
+- Files: `scripts/run_visual_classifier.py`, `demo_assets/friendly_overrides.json` (new), `demo_assets/sample_frames/README.md` (new), `demo_assets/sample_frames/placeholder.png` (new — synthetic smoke-test frame), `demo_assets/visual_profile_overrides.json` (regenerated), `dashboard/public/feeds.json` (regenerated), `.gitignore` (added `weights/`, `demo_assets/sample_frames/*.jpg|jpeg|png` except placeholder, `demo_assets/classifier_log.json`), `team/sebastian/changelog.md`.
+- Why: Stretch task T5 (PF) was greenlit. Path B (live inference as failure-demo). Model side ships independently of Arpit's dashboard surface so we don't block on coordination.
+- Assumptions: YOLOv8n picked over YOLOv8x for stage safety (12 MB ONNX, 24 ms CPU vs 150 MB / multi-second first-run). Synthetic placeholder frame ships in-tree; real FPV frames stay gitignored. `classifier_log.json` shape is a proposal — Arpit can rename fields when he integrates.
+- Open questions: **Still waiting on Arpit** for the three coordination questions in the previous changelog entry (read `bd5f45e`). Specifically: shape of the dashboard read, whether he wants a new `FusionResult` field or a separate fetch.
+- Next step: Arpit picks dashboard shape → tiny edit to `FeedCard.tsx` → live demo beat works end-to-end. Independently: drop a real FPV still at `demo_assets/sample_frames/feed_a.jpg` before stage time (the synthetic placeholder produces meaningless YOLO classes — pipeline works, demo credibility doesn't).
+
 ### 2026-05-03 04:05 - Sebastian (via Claude Code)
 
 - Changed: Coordination ask for Arpit — heads-up before any `dashboard/` edits. Stretch task T5 (real ONNX YOLO via `scripts/run_visual_classifier.py`) is greenlit. Plan is **Path B**: live inference *as a failure demo* at the front of the 3-min walk (run pretrained YOLOv8n on a FEED-A sample frame on stage, show it labels `unknown_drone_like`, use that to motivate why the HMAC marker is load-bearing — Birger Q5 prior-art-delta gets reinforced by a visible vision failure). Demo stays at 3:00 by tightening intro / FEED-D / close.

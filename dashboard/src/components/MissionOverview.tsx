@@ -1,14 +1,14 @@
-import type { FusionResult, MissionManifest } from "../types";
+import type { FusionResult, MissionManifest, FusionState } from "../types";
 import { STATE_LABEL, NEEDS_REVIEW } from "./stateMeta";
 
 interface Props {
-  feeds: (FusionResult & { last_seen_s?: number })[];
+  feeds: FusionResult[];
   manifest: MissionManifest | null;
   generatedAt: number;
   onPick: (id: string) => void;
 }
 
-const STATE_ORDER: (keyof typeof STATE_LABEL)[] = [
+const STATE_ORDER: FusionState[] = [
   "POSSIBLE_SPOOF",
   "SIGNATURE_CORRUPTED",
   "UNKNOWN_NEEDS_REVIEW",
@@ -33,11 +33,9 @@ export default function MissionOverview({ feeds, manifest, generatedAt, onPick }
   const total = feeds.length;
   const reviewCount = feeds.filter((f) => NEEDS_REVIEW.has(f.state)).length;
 
-  // State distribution
-  const dist: Record<string, number> = {};
+  const dist: Partial<Record<FusionState, number>> = {};
   for (const f of feeds) dist[f.state] = (dist[f.state] || 0) + 1;
 
-  // Manifest checklist
   const seenIds = new Set(feeds.map((f) => f.feed_id));
   const declared = manifest?.friendly_drone_ids ?? [];
   const manifestRows = declared.map((id) => {
@@ -50,7 +48,7 @@ export default function MissionOverview({ feeds, manifest, generatedAt, onPick }
   return (
     <div className="mo">
       <div className="mo-eyebrow">
-        <span>Mission overview</span>
+        <span>Mission control</span>
         <span>select a feed at left to inspect</span>
       </div>
       <h2 className="mo-title">{manifest?.mission_id ?? "—"}</h2>

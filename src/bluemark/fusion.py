@@ -1,4 +1,18 @@
-"""Rule-based multi-signal fusion → 5-state dashboard. See docs/fusion_architecture.md."""
+"""Rule-based multi-signal fusion → 5-state dashboard. See docs/fusion_architecture.md.
+
+Signal naming (must match `dashboard/src/components/stateMeta.ts::ALL_SIGNALS`):
+  firmware_marker, steg_iff_token, hmac_verify, time_window, manifest_match,
+  visual_classifier, rc_session.
+
+Failure variants (consumed by `classifySignal` in stateMeta.ts):
+  firmware_marker_mismatch  — marker bytes existed but verification failed
+  steg_iff_token_partial    — token bytes were extracted but couldn't be decoded
+  manifest_miss             — drone ID is not in the active mission manifest
+
+Internal lookups still take FusionSignal `name=marker` etc. as INPUT for back-compat
+with `generate_feeds.py` and tests; the OUTPUT `signals_used` strings use the TS
+vocabulary so the dashboard signal trace lights up correctly.
+"""
 from .schemas import FusionResult, FusionSignal, FusionState
 
 
@@ -28,11 +42,14 @@ def fuse_signals(feed_id: str, signals: list[FusionSignal]) -> FusionResult:
         or (time_window is not None and not fresh)
         or (mission_match is not None and not mission_ok)
     ):
-        used.append("marker")
-        if time_window is not None:
+        # Marker bytes existed but verification failed → emit the *_mismatch variant
+        # so the dashboard signal trace shows it as PRESENT-BUT-BAD.
+        used.append("firmware_marker_mismatch")
+        used.append("steg_iff_token")  # token bytes were extractable
+        if time_window is not None and fresh:
             used.append("time_window")
         if mission_match is not None:
-            used.append("mission_match")
+            used.append("manifest_match" if mission_ok else "manifest_miss")
         return FusionResult(
             feed_id=feed_id,
             state=FusionState.POSSIBLE_SPOOF,
@@ -43,7 +60,8 @@ def fuse_signals(feed_id: str, signals: list[FusionSignal]) -> FusionResult:
 
     # 2. SIGNATURE_CORRUPTED: marker bytes present but did not decode.
     if marker_extracted and not marker_decoded:
-        used.append("marker")
+        used.append("firmware_marker")
+        used.append("steg_iff_token_partial")  # bytes extracted, couldn't decode
         return FusionResult(
             feed_id=feed_id,
             state=FusionState.SIGNATURE_CORRUPTED,
@@ -54,13 +72,15 @@ def fuse_signals(feed_id: str, signals: list[FusionSignal]) -> FusionResult:
 
     # 3 + 4. Marker fully verified — distinguish FRIENDLY_VERIFIED vs LIKELY_FRIENDLY by supporting signals.
     if hmac_valid and fresh and mission_ok:
-        used.extend(["marker", "time_window", "mission_match"])
+        # All three sub-signals of the marker layer fired cleanly.
+        used.extend(["firmware_marker", "steg_iff_token", "hmac_verify",
+                     "time_window", "manifest_match"])
         supporting = 0
         if visual_profile is not None and visual_profile.score >= 0.6 and "known_friendly" in str(
             visual_profile.evidence.get("label", "")
         ):
             supporting += 1
-            used.append("visual_profile")
+            used.append("visual_classifier")
         if rc_session is not None and rc_session.score >= 0.5:
             supporting += 1
             used.append("rc_session")

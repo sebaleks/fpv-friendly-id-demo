@@ -1,5 +1,5 @@
 {
-  "generated_at": 1777825196,
+  "generated_at": 1777825485,
   "mission_id": "MISSION-2026-05-02-A",
   "feeds": [
     {
@@ -7,10 +7,12 @@
       "state": "FRIENDLY_VERIFIED",
       "confidence": 0.95,
       "signals_used": [
-        "marker",
+        "firmware_marker",
+        "steg_iff_token",
+        "hmac_verify",
         "time_window",
-        "mission_match",
-        "visual_profile",
+        "manifest_match",
+        "visual_classifier",
         "rc_session"
       ],
       "reason": "Marker authenticated and fresh, mission match, 2 supporting signal(s)."
@@ -20,9 +22,11 @@
       "state": "LIKELY_FRIENDLY",
       "confidence": 0.65,
       "signals_used": [
-        "marker",
+        "firmware_marker",
+        "steg_iff_token",
+        "hmac_verify",
         "time_window",
-        "mission_match"
+        "manifest_match"
       ],
       "reason": "Marker authenticated and fresh with mission match, but no corroborating supporting signal."
     },
@@ -38,7 +42,8 @@
       "state": "SIGNATURE_CORRUPTED",
       "confidence": 0.4,
       "signals_used": [
-        "marker"
+        "firmware_marker",
+        "steg_iff_token_partial"
       ],
       "reason": "Marker-like data present but too noisy or incomplete to verify."
     },
@@ -47,9 +52,10 @@
       "state": "POSSIBLE_SPOOF",
       "confidence": 0.1,
       "signals_used": [
-        "marker",
+        "firmware_marker_mismatch",
+        "steg_iff_token",
         "time_window",
-        "mission_match"
+        "manifest_match"
       ],
       "reason": "Marker-like data decoded but failed HMAC, freshness, or mission-match."
     }

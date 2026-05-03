@@ -70,7 +70,9 @@ def test_state_friendly_verified():
     r = fuse_signals("FEED-A", signals)
     assert r.state is FusionState.FRIENDLY_VERIFIED
     assert r.confidence >= 0.85
-    assert "visual_profile" in r.signals_used
+    assert "visual_classifier" in r.signals_used  # uses TS stateMeta vocabulary
+    assert "firmware_marker" in r.signals_used
+    assert "hmac_verify" in r.signals_used
 
 
 def test_state_likely_friendly_when_no_supporting():

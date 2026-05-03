@@ -63,8 +63,7 @@ Team assistant folders:
 - Owns: `team/birger/`.
 - Avoid unless coordinated: Source code, dependency changes, detector implementation, frontend implementation.
 - **Current state (2026-05-03):**
-  - ✅ Two urgent SME answers delivered (jamming pattern ~50% intermittent, receiver compute = laptop-class). Plus the load-bearing pitch insight: friendly feeds are already watermarked operationally; BlueMark is the *steganographic + cryptographic* upgrade to that practice.
-  - ⏳ Refinement questions in `team/nicholas/birger_email_questions.md` — 9 questions, email-ready format. Async / non-blocking.
+  - ✅ All 9 SME questions answered (`team/nicholas/birger_responses_2026-05-03.md`). Q5 corrected the pitch — earlier "friendly feeds already watermarked operationally" claim was the concept paper, not field observation. New framing: VBI/covert-watermarking/IFF are decades-old proven prior art; the *combination* applied to live FPV analog video on a flight controller for real-time IFF at zero hardware cost is unaddressed publicly. Q7 added: optimize for minimum false-friendly. Q2 confirmed: visual classifier is truly optional.
   - ⏳ Optional: drop any prior fiber/acoustic/EW-operations notes into `team/birger/` if convenient.
 
 ## Shared interfaces

@@ -10,7 +10,7 @@ Use this file to keep the team coordinated during the hackathon.
 - ✅ **Implementation shipped:** Python core (`src/bluemark/` — HMAC marker + 5-state fusion + Pydantic schemas); React + Vite + TS dashboard (`dashboard/`); pytest 12/12 passing; `feeds.json` covers all 5 states.
 - ✅ ML scope locked: off-the-shelf pretrained YOLO via ONNX (no fine-tuning); stub at `scripts/run_visual_classifier.py` for Sebastian; demo runs without model loaded.
 - ✅ **Steganographic framing adopted** (per Sebastian's "Steganographic IFF FPV" concept doc): production marker embeds in VBI lines 17–20 of NTSC analog video; demo simulates the receiver-side read via `feeds.json`. See `docs/steganographic_iff.md`.
-- ⏳ Birger SME questions: 2 urgent answered (intermittent ~50% jamming, laptop-class receiver, "all friendly feeds already watermarked" insight); 9 refinement questions outstanding in `team/nicholas/birger_email_questions.md` (email-ready).
+- ✅ Birger SME questions: all answered as of 2026-05-03 — see `team/nicholas/birger_responses_2026-05-03.md`. **Pitch corrected:** earlier "deployed friendly watermarks" framing was based on the concept paper, not field observation. New (stronger) framing: VBI encoding + covert watermarking + cryptographic IFF are decades-old proven prior art; the *combination* on live FPV analog video, on a flight controller, for real-time IFF at zero hardware cost is novel.
 - ⏳ Pitch slides: Sebastian-owned, in flight.
 - ⏳ Demo rehearsal: not yet run end-to-end.
 

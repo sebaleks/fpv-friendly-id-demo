@@ -1,4 +1,6 @@
-# SME Questions for Birger — Email-Ready
+# SME Questions for Birger — Email-Ready (✅ ALL ANSWERED 2026-05-03)
+
+> **Status:** All 9 questions have been answered. Responses captured in `team/nicholas/birger_responses_2026-05-03.md`. The email body is preserved below as a record of what was sent.
 
 > Copy the section below the line into an email. Nine questions, grouped into three topics. Short answers fine on each.
 

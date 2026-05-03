@@ -14,7 +14,7 @@ That closed original Q1 (receiver = ground EW team) and Q4 (decision consumer = 
 **Bonus context Birger added:**
 - Receiving teams lock onto drones and record flight path + radio frequency.
 - DJI drones already have encoding interleaved in friendly video feeds.
-- **All friendly video feeds are watermarked** (operationally, today).
+- ~~All friendly video feeds are watermarked (operationally, today).~~ **CORRECTED 2026-05-03:** Birger's full Q5 answer clarified he has *not* seen deployed friendly watermarks; this earlier framing came from the concept paper's response to his Claude prompt. See `team/nicholas/birger_responses_2026-05-03.md` for the corrected prior-art landscape.
 
 **What this means for us:**
 - BlueMark's authenticated-marker concept is *consistent with existing operational practice* — we're adding a cryptographic upgrade to an already-deployed watermarking pattern, not introducing a new idea. Strong pitch framing.

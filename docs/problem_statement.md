@@ -4,9 +4,21 @@ Cheap FPV drones are now disposable, mass-produced battlefield assets, but frien
 
 Higher-end systems may have DroneID, operator-station identification, or dedicated hardware-based IFF. Cheap FPVs usually do not — adding $20+ of extra hardware to a $300 attritable platform doesn't scale. In contested environments, friendly EW teams may see a video or RF signal but still lack confidence that it belongs to their own pilot. This causes accidental self-jamming, lost missions, and operator confusion.
 
-## Why existing watermarking isn't enough
+## What's already proven (in adjacent domains)
 
-Friendly drones (notably DJI variants) already watermark their video feeds operationally. The remaining gap: **visible watermarks become enemy targeting beacons.** Any signature that's too obvious can be used by the enemy to detect and locate friendlies. The system needs to be *invisible to the enemy*, *unforgeable*, and *deployable via firmware flash alone* — no added drone hardware.
+The component techniques BlueMark builds on are publicly documented and decades-old:
+
+- **VBI data encoding** in analog TV (NABTS / teletext / closed-caption) — 1980s standard, 15.6 kbit/s per VBI line.
+- **Covert video watermarking** — VEIL (1990s, luminance-based), Digimarc / Philips WaterCast (~72 bps program ID, no perceptible quality loss). Digimarc alone holds 800+ patents.
+- **Covert light-based IFF** — US Patent 8,750,517 (encoded illumination, undetectable without key).
+- **IR-based dismounted-soldier IFF** — fielded rolling-code systems.
+- **Academic drone steganography** — LSB embedding for drone-captured stored photos.
+
+## What's not been done — the gap
+
+The *combination* applied to this specific problem hasn't been done publicly: **VBI encoding × live FPV analog video × on a flight controller × real-time IFF × zero added hardware cost × mass-produced cheap battlefield drones.** Birger's SME review (2026-05-03) confirmed this gap. Closest equivalent would be classified military programs that wouldn't be public.
+
+We're not inventing new science; we're applying proven techniques to a problem they haven't been applied to. Implementation risk is low; operational risk is key management and ensuring the VBI payload survives the specific VTX / noise floor of cheap FPV hardware (Birger Q4: heavily contested EW environment; production deployment requires in-theatre tweaking).
 
 ## BlueMark FPV (this proof of concept)
 

@@ -11,8 +11,8 @@ A friendly drone embeds a cryptographic HMAC marker into the **Vertical Blanking
 ## Why it exists
 
 - Cheap mass-produced FPV drones can't carry IFF hardware that costs more than the drone.
-- Existing visible watermarks (which friendly forces deploy today) become enemy targeting beacons.
-- The gap is an *invisible* friendly identification channel that scales to disposable platforms — no added BOM cost, just firmware.
+- The component techniques (VBI data encoding, covert watermarking, HMAC-authenticated IFF) are individually proven and decades-old — see `docs/steganographic_iff.md` §"Prior art."
+- The *combination* applied to live FPV analog video on a flight controller for real-time IFF at zero added hardware cost hasn't been done publicly. We're applying proven techniques to a problem they haven't been applied to.
 
 ## Five dashboard states
 
@@ -71,7 +71,7 @@ python scripts/generate_feeds.py                # regenerates feeds.json with re
 
 ## Pitch
 
-Cheap FPVs can't carry IFF hardware. Visible watermarks become enemy targeting beacons. BlueMark hides cryptographic IFF in VBI — invisible to enemy, unforgeable, deployable via firmware flash. ~$50 receiver hardware. ~$0 added per drone.
+Cheap FPVs can't carry IFF hardware. **VBI data encoding, covert watermarking, and HMAC-authenticated IFF are individually decades-old proven technologies** (NABTS, VEIL, Digimarc, US Patent 8,750,517, IR soldier IFF) — but the combination applied to **live FPV analog video on a flight controller** for **real-time IFF** at **zero added hardware cost** hasn't been done. Implementation risk is low; the techniques work. The frontier is operational tuning to cheap-FPV VTX noise. ~$50 receiver hardware. ~$0 added per drone. Optimized for minimum false-friendly: the system never produces a "foe" label and never recommends action.
 
 ## Safety
 

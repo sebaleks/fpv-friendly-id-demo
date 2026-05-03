@@ -2,6 +2,18 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Nicholas's agent writes here.
 
+### 2026-05-03 04:00 - Nicholas (via Claude Code)
+
+- Changed: **Birger SME final-pass incorporation + NICK-004 risk register.** All 9 SME questions now answered (`team/nicholas/birger_responses_2026-05-03.md`). Q5 fundamentally **corrected the pitch** — earlier "deployed friendly watermarks" framing was the concept paper responding to Birger's Claude prompt, *not* field observation. New (stronger) framing: VBI encoding + covert watermarking + cryptographic IFF are decades-old proven prior art (NABTS 1980s, VEIL 1990s, Digimarc 800+ patents, US Patent 8,750,517 covert light IFF, IR soldier IFF, academic drone steganography); the **combination on live FPV analog video / on a flight controller / for real-time IFF / at zero added hardware cost** is unaddressed publicly. Birger's verdict: *"You're not inventing new science, you're applying proven techniques to a new problem."* Q7 added optimization target: **minimum false-friendly.** Q2 confirmed visual classifier is truly optional (not needed for receiver-side IFF). Q4 added the in-theatre-tweaking caveat. Q8 confirmed human-in-loop framing is operationally standard. Subagent A (general-purpose) wrote NICK-004's risk register: 26 risks across 4 categories + fallback playbook + T-30 pre-demo checklist.
+- Files:
+  - **New:** `team/nicholas/risk_register.md` (Agent A; NICK-004 closed), `team/nicholas/birger_responses_2026-05-03.md` (full Q+A capture).
+  - **Pitch corrections (Q5):** `docs/problem_statement.md`, `docs/steganographic_iff.md`, `README.md`, `HANDOFF.md`, memory `project_bluemark.md`.
+  - **Other Birger-driven edits:** `docs/fusion_architecture.md` (Q7 minimum-false-friendly target + Q2 visual-truly-optional note), `team/nicholas/risk_register.md` P5 row corrected, `team/nicholas/meeting_2026-05-02.md` correction note, `team/nicholas/birger_urgent_questions.md` correction note, `team/nicholas/birger_email_questions.md` marked all-answered, `team/nicholas/changelog.md`.
+- Why: User said "full-send after you incorporate his responses." Birger's Q5 response was the load-bearing one — the prior framing ("upgrading deployed practice") was speculative; the new framing ("applying proven techniques to a new problem they haven't been applied to") is honest, citation-backed, and stronger. Plus the risk register gives the presenter a real fallback playbook for tomorrow.
+- Assumptions: Cross-team edits authorized by user (Sebastian-owned files updated for the pitch correction). The risk register's Agent-A output was reviewed and only one row (P5) needed correction post-Birger; the rest is solid.
+- Open questions: None blocking. Demo rehearsal still pending; pitch slides Sebastian-owned.
+- Next step: User runs the answered Birger doc by him for one final pass per the two-task workflow. Demo rehearsal end-to-end. Sebastian's pitch slides reflect the corrected prior-art framing.
+
 ### 2026-05-03 03:00 - Nicholas (via Claude Code)
 
 - Changed: **Comprehensive consistency pass** — drift sweep across code, docs, division of labor, and PF. Adopted Sebastian's "Steganographic IFF FPV" concept doc as the load-bearing pitch framing (VBI lines 17–20 of NTSC, invisible-to-enemy steganography on top of HMAC). Created the email-ready Birger SME doc — 9 unanswered questions in 3 groups, copy-pasteable.

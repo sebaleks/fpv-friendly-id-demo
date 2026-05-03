@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 20:50 - Sebastian (via Claude Code)
+
+- Changed: Updated `docs/demo_script.md` for `NO_SIGNAL` state landing in `2cdb559`/`0b7747e`. Mission manifest now declares 9 friendlies (A–I); only 5 (A–E) have feeds; dashboard synthesizes 4 NO_SIGNAL placeholders. Script now opens with "Nine declared, five with live signal, four lost" — turns the manifest cross-check beat from speculative to literal (operator can see the lost-signal rows on screen). Compensated by trimming redundant phrasing in the architecture sentence and the FEED-D+C combined beat. Lands at 3:11 with click overhead at 165 wpm.
+- Files: `docs/demo_script.md`, `team/sebastian/changelog.md`.
+- Why: The team shipped the operational scenario the user just asked the script to surface — manifest cross-check now has visible drama (4 missing rows) instead of "5/5 seen, nothing to see." Worth the words.
+- Assumptions: Mission manifest will continue declaring more friendlies than feeds.json contains; if Nicholas tightens it back to 5/5 the "four lost" line breaks. Demo-locked tag is on `2cdb559`; this script change is post-lock and demo-day-only.
+- Open questions: None blocking.
+- Next step: Read-aloud rehearsal against a stopwatch (PF P0).
+
 ### 2026-05-03 20:25 - Sebastian (via Claude Code)
 
 - Changed: Restructured `docs/demo_script.md` to Sebastian's four-part outline: (1) background + US Army relevance 0:00-0:25, (2) problem statement 0:25-0:40, (3) solution + demo deep-dive 0:40-2:40, (4) scalability/cost/margin 2:40-3:00. Added operational-features mini-beat inside Part 3 (2:20-2:40) covering: TacticalMap coordinates for prioritizing unknowns/spoofs near sensitive assets, manifest cross-check for missing-but-expected drones, recent-transitions log for temporal context. Cost beat names the dollar-per-drone × 7M-drone math = $7M peer-fight program, "one prevented friendly-fire incident pays for the entire deployment."

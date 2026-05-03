@@ -27,7 +27,7 @@
 #### 0:40 – 0:55 — The architecture (one sentence) + open Mission Control
 *(Gesture at the screen as you say "here's what the operator sees.")*
 
-"Yes — by embedding an HMAC-authenticated marker in the **unrendered VBI lines** of the analog video. Invisible to the pilot, invisible to anyone watching the picture, generated on the drone's existing flight controller. Zero added hardware. Detection runs on a backpack laptop. Edge-on-edge. Here's what an EW operator sees. \[gesture top bar\] Five feeds in this AO; **two need review**. List sorted by severity — top is what needs attention now."
+"Yes — by embedding an HMAC-authenticated marker in the **unrendered VBI lines** of the analog video. Invisible to the picture, generated on the drone's existing flight controller. Zero added hardware; detection runs on a backpack laptop. Here's what an EW operator sees. \[gesture top bar\] **Nine declared friendlies in today's mission, five with live signal, four lost.** Two of the five need operator review. List sorted by severity — top is what needs attention now."
 
 #### 0:55 – 1:15 — FEED-E: `POSSIBLE_SPOOF`
 *(Click FEED-E in the left list.)*
@@ -37,7 +37,7 @@
 #### 1:15 – 1:35 — FEED-D + FEED-C: ambiguous in different ways
 *(Click FEED-D, then FEED-C.)*
 
-"\[click FEED-D\] SIGNATURE_CORRUPTED — marker came through partial. Analog noise. \[click FEED-C\] UNKNOWN — no marker at all. Both end up the same place: **operator review**. **Unknown is not foe** — that's the hard line. We do not force verdicts on noisy or absent data."
+"\[click FEED-D\] SIGNATURE_CORRUPTED — partial marker, analog noise. \[click FEED-C\] UNKNOWN — no marker at all. Both end up the same place: **operator review**. **Unknown is not foe** — that's the hard line."
 
 #### 1:35 – 1:55 — FEED-B: `LIKELY_FRIENDLY`
 *(Click FEED-B.)*
@@ -52,7 +52,7 @@
 #### 2:20 – 2:40 — Operational features + return to Mission Control
 *(Click "Mission Control" in the top bar.)*
 
-"Couple of operationally useful touches. \[point to TacticalMap\] **Every feed has estimated coordinates** — operators can prioritize unknowns or possible spoofs near sensitive assets without scanning the list. \[point to declared-friendlies panel\] **Manifest cross-check** flags any drone that's expected but missing — comms loss, downed asset, or worse. \[point to event log\] **Recent transitions** show what just changed, not just current state. And a pretrained visual classifier sits behind a safety invariant in the repo — we cut it from the live path because the cryptographic marker is sufficient."
+"Couple of operationally useful touches. \[point to TacticalMap\] **Every feed has estimated coordinates** — operators can prioritize unknowns or possible spoofs near sensitive assets without scanning the list. \[point to declared-friendlies panel — four NO_SIGNAL rows visible\] **Manifest cross-check** — these four were declared in the mission but never showed signal. Could be link loss, downed asset, or never launched. The system surfaces the gap; the operator decides what to do about it. \[point to event log\] **Recent transitions** show what just changed, not just current state. And a pretrained visual classifier sits behind a safety invariant in the repo — we cut it from the live path because the cryptographic marker is sufficient."
 
 ---
 

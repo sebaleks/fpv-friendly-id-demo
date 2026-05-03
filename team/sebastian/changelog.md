@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 20:25 - Sebastian (via Claude Code)
+
+- Changed: Restructured `docs/demo_script.md` to Sebastian's four-part outline: (1) background + US Army relevance 0:00-0:25, (2) problem statement 0:25-0:40, (3) solution + demo deep-dive 0:40-2:40, (4) scalability/cost/margin 2:40-3:00. Added operational-features mini-beat inside Part 3 (2:20-2:40) covering: TacticalMap coordinates for prioritizing unknowns/spoofs near sensitive assets, manifest cross-check for missing-but-expected drones, recent-transitions log for temporal context. Cost beat names the dollar-per-drone × 7M-drone math = $7M peer-fight program, "one prevented friendly-fire incident pays for the entire deployment."
+- Files: `docs/demo_script.md`, `team/sebastian/changelog.md`.
+- Why: Original v3 script had no opening hook, didn't surface US Army relevance, buried operational features, and didn't make the cost/margin case explicit. Sebastian's outline fixes all four.
+- Assumptions: 165 wpm conversational pace; per-section breakdown lands inside user's target windows; total = 2:54 spoken + 10s click overhead = 3:04 (within rehearsal-tightening distance of clean 3:00). US Army FPV-units-stood-up-2024 fact is sourced from public Army announcements (verifiable; if challenged, soften to "the US Army is following Ukraine's adoption curve").
+- Open questions: None blocking. Recovery patter section is in the script; operator can fall back to the 30-second emergency version if the dashboard breaks mid-demo.
+- Next step: Read-aloud rehearsal against a stopwatch (PF P0). If consistently overshooting, the FEED-D+FEED-C combined beat is the cheapest cut.
+
 ### 2026-05-03 19:50 - Sebastian (via Claude Code)
 
 - Changed: Reconciled `docs/demo_script.md` against Arpit's v3 dashboard (split-pane + MissionOverview + TacticalMap + signal trace) and Nicholas's YOLO-cut decision (`7aa524b`). New script: severity-sorted walk **E→A** (not A→E — opposite direction; the default sort + dramatically stronger arc), opens on MissionOverview, narrates per-feed from the signal trace (PASS/FAIL/MISSING for all 7 signals), folds in the honest "we built it, gated it, cut it" ML talking point per `judge_faq.md` Q6, returns to Mission Control before the close. Word count cut 564 → 503 to fit 3:00 budget (lands at 3:00 at 180 wpm / 3:15 at 165 wpm + 13s click overhead).

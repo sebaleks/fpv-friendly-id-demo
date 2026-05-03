@@ -75,6 +75,21 @@ The fusion and dashboard layers (this repo's `src/bluemark/fusion.py` + `dashboa
 3. Receiver script — Python on Pi, captures composite, extracts VBI lines, validates HMAC, emits FusionSignal feeds into our existing fusion engine.
 4. Field trial — mark N friendly drones, run EW detection, measure FP/FN rate.
 
+## Why this fits Natsec Problem Statement 2 (Edge Deployments)
+
+Problem Statement 2 asks for *"computation and control pushed to the tactical edge"* in *"austere, disconnected environments, sometimes from nothing more than a backpack,"* with *"power, latency, and mission complexity"* balanced.
+
+| PS2 requirement | BlueMark's answer |
+|---|---|
+| "Push computation to tactical edge" | Marker generation runs on the drone's Betaflight FC (STM32-class). Detection runs on a Pi / laptop / EW scanner. No cloud, no central server. Edge-on-edge. |
+| "Austere, disconnected environments" | Receiver works offline. Drone signs locally with a pre-shared key (provisioned at flash time). No backhaul required at any point. |
+| "From a backpack" | $50 receiver kit (Pi + USB capture card) is backpack-portable. The whole receiver-side stack fits in a laptop bag. |
+| "Resilient drone systems" | IFF lives at the analog-video / VBI layer — not GPS, not cellular, not satellite. Survives jammed RF environments to the same extent any signal does at all (Birger Q1 confirmed ~50% feed throughput is operational baseline). |
+| "Balancing power, latency, mission complexity" | ~16 ms decision latency (one frame at 60 fps). Zero added drone power (firmware-only; the OSD chip's existing draw doesn't change). ~64 bits/frame payload — negligible bandwidth. |
+| "Low to moderate compute availability" | STM32 on drone; Pi or laptop on receiver. Deliberately *not* Jetson- or server-class — that's the design point. |
+
+This is the corner of PS2 that BlueMark addresses: **edge-on-edge IFF for the most common and numerous low-end analog FPV drones and EW receptors.** It does not address autonomous flight, swarming, or mission-execution edge intelligence — those are adjacent corners of PS2 that other teams may target.
+
 ## What we explicitly reject from the source concept
 
 The source doc proposed: *"Decision rule: Unknown = eligible to jam. Friend = skip."* We **explicitly disagree** with that framing. The hackathon's hard event constraint is human-in-the-loop, and Birger (SME, 2026-05-03 reply) confirmed it: *"Human in the loop is still standard. There may be other signatures being used in addition to the watermark. In the end it is a decision made by an interceptor operator."* Our 5-state taxonomy (`FRIENDLY_VERIFIED`, `LIKELY_FRIENDLY`, `UNKNOWN_NEEDS_REVIEW`, `SIGNATURE_CORRUPTED`, `POSSIBLE_SPOOF`) gives the operator nuance; the system never recommends engagement. Anything that isn't authenticated as friendly is `UNKNOWN_NEEDS_REVIEW`, not "eligible to jam."

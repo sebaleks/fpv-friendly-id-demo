@@ -1,5 +1,11 @@
 # Problem Statement
 
+> **Submitted under:** Natsec Hackathon Problem Statement 2 — Edge Deployments and Drone Operation. *"Operators on the front lines need to command autonomous systems from austere, disconnected environments, sometimes from nothing more than a backpack. How can we push computation and control to the tactical edge..."*
+
+BlueMark FPV is an **edge-on-edge** answer to one specific corner of that challenge: friend-or-foe identification of cheap analog FPV drones in austere, EW-contested, disconnected environments. Marker generation runs on the drone's existing Betaflight flight controller (STM32-class compute, no added hardware). Detection runs receiver-side on a backpack-portable rig (Pi + USB capture card, ~$50; or a laptop / EW scanner). No cloud, no central server, no satellite link — everything happens at the tactical edge.
+
+## The specific gap
+
 Cheap FPV drones are now disposable, mass-produced battlefield assets, but friendly identification has not scaled with them.
 
 Higher-end systems may have DroneID, operator-station identification, or dedicated hardware-based IFF. Cheap FPVs usually do not — adding $20+ of extra hardware to a $300 attritable platform doesn't scale. In contested environments, friendly EW teams may see a video or RF signal but still lack confidence that it belongs to their own pilot. This causes accidental self-jamming, lost missions, and operator confusion.

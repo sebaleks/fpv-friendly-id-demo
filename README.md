@@ -1,6 +1,8 @@
 # BlueMark FPV
 
-**Steganographic IFF for cheap analog FPV drones.** A receiver-side identification aid that helps a human operator decide whether an incoming FPV video feed belongs to their own pilot.
+**Edge-on-edge software-only IFF for cheap analog FPV drones.** A lightweight watermark-generation-and-detection system for the most common and numerous low-end analog drones and EW receptors with low-to-moderate compute availability. Marker generation runs on the drone's existing flight controller (Betaflight FC, STM32-class); detection runs on a backpack-portable receiver (Pi + USB capture card, or a laptop / EW scanner). No cloud, no central server, no added drone hardware.
+
+Submitted to: **Natsec Hackathon — Problem Statement 2 (Edge Deployments and Drone Operation).**
 
 > Hackathon demo. Not production. Identification aid only — human decision required.
 

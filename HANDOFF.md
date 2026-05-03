@@ -4,6 +4,9 @@ Use this file to keep the team coordinated during the hackathon.
 
 ## Current Status (post-implementation push, 2026-05-03)
 
+**Submitted to:** Natsec Hackathon Problem Statement 2 — *Edge Deployments and Drone Operation*. Pitch leads with edge-on-edge framing (drone-side STM32 marker generation + backpack-portable receiver detection, no cloud, software-only).
+
+
 - ✅ Cross-agent context sync workflow live (`CONTEXT.md` + `.githooks/`).
 - ✅ Sebastian demo planning docs done (`docs/demo_plan.md`, `demo_script.md`, `acceptance_checklist.md`, `dashboard_states.md`, `cost_tiers.md`).
 - ✅ Architecture locks: Problem A (drone marks own video, ground EW reads, human decides), human-in-loop hard event constraint, 5-state taxonomy, risk-zone dropped.

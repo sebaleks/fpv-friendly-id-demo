@@ -2,7 +2,9 @@
 
 ## 2-Minute Live Narration
 
-"BlueMark FPV is a simulated identification aid for friendly FPV video feeds. Cheap FPV drones can look similar on analog video, and friendly EW teams may not know whether a feed belongs to their own pilot. This prototype does not target, jam, or recommend engagement. It only helps a human operator classify feeds."
+> *Suggested presenter language for Problem Statement 2 (Edge Deployments). Sebastian as integrator can accept, edit, or replace.*
+
+"BlueMark FPV is edge-on-edge software-only IFF for cheap analog FPV drones — the most numerous platforms in the conflict and the ones least served by traditional IFF hardware. Marker generation runs on the drone's existing flight controller. Detection runs on a backpack-portable receiver — a Pi and a fifteen-dollar capture card, or a laptop. No cloud. No central server. Zero added hardware on the drone. The system is an identification aid only — it never recommends engagement; the operator decides."
 
 "Here the dashboard shows three incoming simulated FPV feeds. Feed A is a friendly signed feed, Feed B is unsigned and unknown, and Feed C is a friendly feed where the marker has been degraded by noise."
 
@@ -34,4 +36,4 @@
 
 ## Closing Sentence
 
-"The value is not autonomous action; it is clearer human deconfliction when cheap FPV feeds are otherwise hard to distinguish."
+"The value is clearer human deconfliction at the tactical edge — running entirely on hardware already in the field, in the austere, EW-contested, disconnected environments where IFF actually has to work."

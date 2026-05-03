@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 19:50 - Sebastian (via Claude Code)
+
+- Changed: Reconciled `docs/demo_script.md` against Arpit's v3 dashboard (split-pane + MissionOverview + TacticalMap + signal trace) and Nicholas's YOLO-cut decision (`7aa524b`). New script: severity-sorted walk **E→A** (not A→E — opposite direction; the default sort + dramatically stronger arc), opens on MissionOverview, narrates per-feed from the signal trace (PASS/FAIL/MISSING for all 7 signals), folds in the honest "we built it, gated it, cut it" ML talking point per `judge_faq.md` Q6, returns to Mission Control before the close. Word count cut 564 → 503 to fit 3:00 budget (lands at 3:00 at 180 wpm / 3:15 at 165 wpm + 13s click overhead).
+- Files: `docs/demo_script.md`, `team/sebastian/changelog.md`. PF: T8 (re-validate script against v3 dashboard) marked complete; T1 demoted to P3 (real FPV still — only needed if reversing Nicholas's cut); T9 (wire classifier_log.json) cancelled (no surface to wire into per Nicholas's cut).
+- Why: Three commits since the script was last touched changed the dashboard significantly (`9aea062` v3 split-pane, `d3129de` liquid-glass + TacticalMap, `1417df5` P0 QA fixes). Script referenced "5 cards in a grid" and "left-to-right A→E" — neither exists in v3. Also referenced "real visual classifier" on FEED-A — Nicholas cut that path; script needed to invert to the safety-architecture talking point.
+- Assumptions: Severity sort stays the default (Arpit's choice in App.tsx). MissionOverview's manifest cross-check uses `dashboard/public/mission_manifest.json` which currently lists all 5 feeds — drama is muted but honesty wins (no fake "missing" entries). 180 wpm pace is achievable; if delivery drifts to 165 wpm the demo lands at 3:15 — flag if hard 3:00 ceiling.
+- Open questions: Should `mission_manifest.json` list a SUBSET (3 of 5) so the cross-check shows visible "not seen" rows? That'd be a Nicholas/generate_feeds.py change; small but pitch-strengthening. Punt unless asked.
+- Next step: Read-aloud rehearsal against a stopwatch (PF P0, only-you task). Drop a real FPV still only if reversing the YOLO cut (P3, optional).
+
 ### 2026-05-03 04:35 - Sebastian (via Claude Code)
 
 - Changed: Shipped the model side of T5 (real ONNX YOLOv8n integration). `scripts/run_visual_classifier.py` is now real: loads `weights/yolov8n.onnx` via onnxruntime CPU provider, runs per-feed inference on `demo_assets/sample_frames/<feed_id>.jpg`, writes `demo_assets/visual_profile_overrides.json` (existing contract, unchanged downstream) plus a new `demo_assets/classifier_log.json` (per-frame raw + final label + rationale + latency — the file Arpit's dashboard surface will read once he lands on a shape). 24 ms post-warmup inference on CPU. Graceful fallback when weights or frames missing. Safety invariant enforced in `_resolve_label()`: YOLO output **never** derives `known_friendly_*`; only the hand-labeled `demo_assets/friendly_overrides.json` may promote a feed to that label.

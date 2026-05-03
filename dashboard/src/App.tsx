@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { FeedsBundle, DisplayFeed, MissionManifest } from "./types";
+import type { FeedsBundle, DisplayFeed, FusionState, MissionManifest } from "./types";
 import { sortFeeds, NEEDS_REVIEW, type SortMode } from "./components/stateMeta";
 import FeedListItem from "./components/FeedListItem";
 import FeedDetail from "./components/FeedDetail";
@@ -7,6 +7,16 @@ import MissionOverview from "./components/MissionOverview";
 import TacticalMap from "./components/TacticalMap";
 
 type Density = "compact" | "comfortable" | "spacious";
+
+// Cycle order for Shift+<letter> demo state flips. Hits all 5 fusion states
+// in severity order so each Shift-press shows a distinct transition.
+const STATE_CYCLE: FusionState[] = [
+  "FRIENDLY_VERIFIED",
+  "LIKELY_FRIENDLY",
+  "UNKNOWN_NEEDS_REVIEW",
+  "SIGNATURE_CORRUPTED",
+  "POSSIBLE_SPOOF",
+];
 
 // Synthesize a NO_SIGNAL placeholder for a declared friendly that has no
 // feed entry. Birger flagged real-world feed loss (~50% throughput); the
@@ -29,6 +39,9 @@ export default function App() {
   const [sort, setSort] = useState<SortMode>("severity");
   const [density, setDensity] = useState<Density>("compact");
   const [showVideo, setShowVideo] = useState(true);
+  // Demo-only: per-feed state overrides driven by Shift+<letter>. Lets the
+  // presenter flip a feed live so judges see the state-change animation.
+  const [stateOverrides, setStateOverrides] = useState<Record<string, FusionState>>({});
 
   useEffect(() => {
     fetch("/feeds.json", { cache: "no-store" })
@@ -41,16 +54,50 @@ export default function App() {
       .catch(() => setManifest(null));
   }, []);
 
+  // Hotkeys:
+  //   A–I             → select FEED-<letter>
+  //   Shift + A–I     → cycle that feed's state (drives the transition animation)
+  //   Esc             → back to overview
+  // Skips when an input/select/textarea has focus so toolbar selects keep working.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+      if (e.key === "Escape") { setSelectedId(null); return; }
+      const k = e.key.toUpperCase();
+      if (k.length !== 1 || k < "A" || k > "I") return;
+      const feedId = `FEED-${k}`;
+      if (e.shiftKey) {
+        e.preventDefault();
+        setSelectedId(feedId);
+        setStateOverrides((prev) => {
+          const baseline = bundle?.feeds.find((f) => f.feed_id === feedId)?.state;
+          const current = prev[feedId] ?? baseline ?? STATE_CYCLE[0];
+          const idx = STATE_CYCLE.indexOf(current as FusionState);
+          const next = STATE_CYCLE[(idx + 1) % STATE_CYCLE.length];
+          return { ...prev, [feedId]: next };
+        });
+      } else {
+        setSelectedId(feedId);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [bundle]);
+
   // Merge real feeds with synthesized NO_SIGNAL rows for declared friendlies
-  // that never showed up in feeds.json. Memoized so list/map share identity.
+  // that never showed up in feeds.json. Demo state overrides (Shift+<letter>)
+  // are applied last so the presenter can flip a feed live.
   const merged: DisplayFeed[] = useMemo(() => {
     if (!bundle) return [];
     const real: DisplayFeed[] = bundle.feeds;
     const seen = new Set(real.map((f) => f.feed_id));
     const declared = manifest?.friendly_drone_ids ?? [];
     const synth = declared.filter((id) => !seen.has(id)).map(synthNoSignal);
-    return [...real, ...synth];
-  }, [bundle, manifest]);
+    const all = [...real, ...synth];
+    return all.map((f) => stateOverrides[f.feed_id] ? { ...f, state: stateOverrides[f.feed_id] } : f);
+  }, [bundle, manifest, stateOverrides]);
 
   if (error) {
     // NICK-047: distinguish 404 (likely missing file) from parse / network errors.
@@ -144,6 +191,9 @@ export default function App() {
       <footer className="app-foot">
         <span className="app-foot-canonical">Identification aid only. Human decision required. Not production IFF.</span>
         <span className="app-foot-tweaks">
+          <span className="app-foot-hint">
+            <kbd>A</kbd>–<kbd>I</kbd> select · <kbd>Shift</kbd>+<kbd>A</kbd>–<kbd>I</kbd> cycle state · <kbd>Esc</kbd> overview
+          </span>
           <label><input type="checkbox" checked={showVideo} onChange={(e) => setShowVideo(e.target.checked)} /> video</label>
           <label>density:&nbsp;
             <select value={density} onChange={(e) => setDensity(e.target.value as Density)}>

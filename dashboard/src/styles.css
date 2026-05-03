@@ -162,6 +162,15 @@ button { font-family: inherit; }
 .app-foot-canonical { color: var(--ink-2); }
 .app-foot-tweaks { display: flex; gap: 14px; align-items: center; }
 .app-foot-tweaks label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.app-foot-hint { color: var(--ink-2); font-size: 9px; letter-spacing: 0.4px; }
+.app-foot-hint kbd {
+  font-family: var(--mono); font-size: 9px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px; padding: 1px 5px;
+  color: var(--ink); margin: 0 1px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
 
 .fd-warning, .mo-warning {
   margin-top: 16px;
@@ -184,7 +193,7 @@ button { font-family: inherit; }
   border: none; border-top: 1px solid rgba(255,255,255,0.04);
   border-left: 2px solid transparent;
   padding: 10px 14px;
-  transition: background 120ms ease;
+  transition: background 200ms ease, border-left-color 200ms ease, box-shadow 200ms ease;
 }
 .fli-compact   { padding: 6px 14px; }
 .fli-spacious  { padding: 14px 14px; }
@@ -193,6 +202,12 @@ button { font-family: inherit; }
   background: linear-gradient(90deg, rgba(77,143,245,0.14), rgba(77,143,245,0.02));
   border-left-color: var(--accent);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 0 rgba(0,0,0,0.3);
+  animation: fli-pulse 360ms ease-out;
+}
+@keyframes fli-pulse {
+  0%   { background: rgba(77,143,245,0.45); border-left-color: rgba(140,180,255,1); }
+  60%  { background: rgba(77,143,245,0.22); }
+  100% { background: linear-gradient(90deg, rgba(77,143,245,0.14), rgba(77,143,245,0.02)); border-left-color: var(--accent); }
 }
 
 .fli-thumb {
@@ -205,7 +220,8 @@ button { font-family: inherit; }
 .fli-body { min-width: 0; }
 .fli-head { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
 .fli-id { font-family: var(--mono); font-size: 12px; letter-spacing: 0.3px; color: var(--ink); }
-.fli-state { font-size: 10px; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 600; color: var(--ink-2); }
+.fli-state { font-size: 10px; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 600; color: var(--ink-2); transition: color 280ms ease; }
+.fli-glyph { transition: color 280ms ease; }
 
 .fli-meta { text-align: right; font-family: var(--mono); }
 .fli-pct { font-size: 12px; color: var(--ink); }
@@ -285,7 +301,9 @@ button { font-family: inherit; }
 .fd-bar-fill {
   height: 100%; background: var(--accent);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 0 12px rgba(77,143,245,0.4);
+  transition: background 320ms ease, box-shadow 320ms ease, width 320ms ease;
 }
+.fd-state { transition: color 280ms ease; }
 .fd-state-friendly_verified .fd-bar-fill { background: var(--verified); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
 .fd-state-unknown_needs_review .fd-bar-fill,
 .fd-state-signature_corrupted .fd-bar-fill { background: var(--warn); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 0 10px rgba(198,154,58,0.4); }
@@ -540,15 +558,20 @@ button { font-family: inherit; }
   width: 18px; height: 18px;
   background: transparent; border: none;
   cursor: pointer; padding: 0;
-  transition: width 200ms ease, height 200ms ease;
+  transition: width 220ms ease, height 220ms ease, left 280ms ease, top 280ms ease;
 }
-.tmap-marker-selected { width: 28px; height: 28px; }
+.tmap-marker-selected { width: 28px; height: 28px; animation: tmap-snap 360ms ease-out; }
+@keyframes tmap-snap {
+  0%   { transform: translate(-50%, -50%) scale(1.6); filter: brightness(1.6); }
+  100% { transform: translate(-50%, -50%) scale(1);   filter: brightness(1); }
+}
 
 .tmap-glyph {
   position: absolute; left: 50%; top: 50%;
   width: 55%; height: 55%;
   transform: translate(-50%, -50%);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+  transition: background 320ms ease, border-radius 320ms ease, box-shadow 320ms ease, transform 320ms ease;
 }
 /* friendly = filled square, blue */
 .tmap-marker-friendly .tmap-glyph {

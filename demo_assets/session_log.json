@@ -1,9 +1,9 @@
 {
   "sessions": [
-    {"feed_id": "FEED-A", "drone_id": "FPV-NICK-01",  "rc_channel": 7,  "pilot_id": "PILOT-1234", "started_at_unix": 1746208900},
-    {"feed_id": "FEED-B", "drone_id": "FPV-NICK-02",  "rc_channel": 9,  "pilot_id": "PILOT-2345", "started_at_unix": 1746208910},
-    {"feed_id": "FEED-C", "drone_id": null,            "rc_channel": null, "pilot_id": null,        "started_at_unix": 1746208920},
-    {"feed_id": "FEED-D", "drone_id": "FPV-NICK-02",  "rc_channel": 11, "pilot_id": "PILOT-5678", "started_at_unix": 1746208930},
-    {"feed_id": "FEED-E", "drone_id": "FPV-UNKNOWN",  "rc_channel": 99, "pilot_id": "UNKNOWN",     "started_at_unix": 1746208940}
+    {"feed_id": "FEED-A", "drone_id": "AIRFRAME-1A2B", "rc_channel": 7,  "pilot_id": "PILOT-7401", "started_at_unix": 1746208900},
+    {"feed_id": "FEED-B", "drone_id": "AIRFRAME-3C4D", "rc_channel": 9,  "pilot_id": "PILOT-7402", "started_at_unix": 1746208910},
+    {"feed_id": "FEED-C", "drone_id": null,             "rc_channel": null, "pilot_id": null,         "started_at_unix": 1746208920},
+    {"feed_id": "FEED-D", "drone_id": "AIRFRAME-5E6F", "rc_channel": 11, "pilot_id": "PILOT-7403", "started_at_unix": 1746208930},
+    {"feed_id": "FEED-E", "drone_id": "AIRFRAME-UNK",  "rc_channel": 99, "pilot_id": "PILOT-UNK",  "started_at_unix": 1746208940}
   ]
 }

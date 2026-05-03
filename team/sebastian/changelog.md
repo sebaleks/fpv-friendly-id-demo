@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 04:05 - Sebastian (via Claude Code)
+
+- Changed: Coordination ask for Arpit — heads-up before any `dashboard/` edits. Stretch task T5 (real ONNX YOLO via `scripts/run_visual_classifier.py`) is greenlit. Plan is **Path B**: live inference *as a failure demo* at the front of the 3-min walk (run pretrained YOLOv8n on a FEED-A sample frame on stage, show it labels `unknown_drone_like`, use that to motivate why the HMAC marker is load-bearing — Birger Q5 prior-art-delta gets reinforced by a visible vision failure). Demo stays at 3:00 by tightening intro / FEED-D / close.
+- Files: `team/sebastian/changelog.md` (this file). No code yet.
+- Why: Path B requires a small visible touch to `dashboard/` — likely a "Last classified: \<label\> (\<score\>)" line or a small "Run classifier" affordance on FEED-A so the live inference has a target the audience can see. `dashboard/` is Arpit-owned per `team/work_allocation.md`. Posting before touching, per `CONTEXT.md` ("If the work you're doing requires editing a file outside your write surface, stop and ask the owner first").
+- Assumptions: YOLOv8n (~6 MB, ~0.1-0.3s CPU inference) over YOLOv8x (~150 MB, multi-second first-run) — safer for live stage. Pretrained, no fine-tuning. Output stays inside the existing visual_profile contract (`docs/fusion_architecture.md`). No fusion-logic changes; `scripts/generate_feeds.py` already prefers `demo_assets/visual_profile_overrides.json` when present.
+- Open questions: **For Arpit** — (1) OK to add a small read-only "last classifier output" line to `FeedCard.tsx`, or would you rather own the implementation and I just ship the script + JSON? (2) If you want to own it, what shape do you want for the input — a new field on `FusionResult`, or a separate `classifier.json` the dashboard fetches? (3) Any objection to the live-inference beat being on FEED-A specifically?
+- Next step: Wait for Arpit's read on the dashboard surface. In parallel, I can ship the model side (script + weights download path + `visual_profile_overrides.json` writer + sample-frame slot at `demo_assets/sample_frames/`) — that work doesn't touch `dashboard/`.
+
 ### 2026-05-03 03:25 - Sebastian (via Claude Code)
 
 - Changed: Dropped pitch slides per Sebastian's call. Executed end-to-end demo (3-min target, no slides) and shipped the judge Q&A 1-pager. Rewrote `docs/demo_script.md` for 3:00 × 5-state walk (FRIENDLY_VERIFIED → LIKELY_FRIENDLY → UNKNOWN_NEEDS_REVIEW → SIGNATURE_CORRUPTED → POSSIBLE_SPOOF). Wrote `docs/judge_faq.md` (5 Q&As, safety-reviewed against AGENTS.md). Refreshed `docs/acceptance_checklist.md` for the 5-feed model and ticked verified items. Verified pipeline: `python scripts/generate_feeds.py` produces all 5 states; `dashboard/` builds + serves on :5174 with the persistent "Identification aid only. Human decision required." footer; pytest 12/12.

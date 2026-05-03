@@ -7,7 +7,11 @@
     "FEED-B",
     "FEED-C",
     "FEED-D",
-    "FEED-E"
+    "FEED-E",
+    "FEED-F",
+    "FEED-G",
+    "FEED-H",
+    "FEED-I"
   ],
   "issued_by": "TEAM-BLUEMARK",
   "notes": "Hackathon demo manifest. Identification aid only; human decision required."

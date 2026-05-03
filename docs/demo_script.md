@@ -1,34 +1,48 @@
 # Demo Script
 
-## 2-Minute Live Narration
+## 3-Minute Live Narration (Authoritative — no pitch slides)
 
-> *Suggested presenter language for Problem Statement 2 (Edge Deployments). Sebastian as integrator can accept, edit, or replace.*
+> *Walk the live dashboard. Every beat keeps the persistent footer "Identification aid only. Human decision required." visible. Total target: 3:00.*
 
-"BlueMark FPV is edge-on-edge software-only IFF for cheap analog FPV drones — the most numerous platforms in the conflict and the ones least served by traditional IFF hardware. Marker generation runs on the drone's existing flight controller. Detection runs on a backpack-portable receiver — a Pi and a fifteen-dollar capture card, or a laptop. No cloud. No central server. Zero added hardware on the drone. The system is an identification aid only — it never recommends engagement; the operator decides."
+### 0:00 – 0:30 — Frame the problem (no slides)
+"BlueMark FPV is edge-on-edge, software-only friendly-identification for cheap analog FPV drones — the most numerous platforms in the conflict and the ones least served by traditional IFF hardware. Marker generation runs on the drone's existing STM32 flight controller. Detection runs on a backpack-portable receiver — a Pi and a fifteen-dollar capture card, or a laptop. No cloud. No central server. Zero added hardware on the drone. We embed the friendly marker in the unrendered VBI lines of the analog video, so it's invisible to the pilot and to anyone watching the picture. The system is an identification aid only — it never recommends engagement; the operator decides."
 
-"Here the dashboard shows three incoming simulated FPV feeds. Feed A is a friendly signed feed, Feed B is unsigned and unknown, and Feed C is a friendly feed where the marker has been degraded by noise."
+### 0:30 – 0:45 — FEED-A: `FRIENDLY_VERIFIED`
+"Feed A has an HMAC-authenticated marker that's fresh, matches today's mission, and is corroborated by RC-session and visual-profile signals. Highest confidence. Still surfaced as an *aid* — never as an engagement recommendation."
 
-"Feed A has a readable OSD-like authenticated marker, so the dashboard marks it Friendly Verified. Feed B has no valid marker, so it stays Unknown. Feed C has marker-like data, but not enough clean signal to verify, so it is Signature Corrupted and needs human review."
+### 0:45 – 1:00 — FEED-B: `LIKELY_FRIENDLY`
+"Feed B's marker authenticates and is in-window, but no supporting signal corroborates it. We deliberately do not promote it to fully verified — we optimize for minimum false-friendly. A foe wearing a stolen marker stops here; it does *not* climb to FRIENDLY_VERIFIED."
 
-"Every state keeps the same warning visible: Identification aid only. Human decision required. A production system would need real integration, testing, secure key management, and validation under analog-video degradation."
+### 1:00 – 1:30 — FEED-C: `UNKNOWN_NEEDS_REVIEW`
+"Feed C has no decodable marker at all. The system does not guess. **Unknown is not foe** — that's the hard line. We surface it for human review with the same persistent warning. The complement of friendly-verified is *not-confirmed-friendly*, never hostile."
 
-## Step-by-Step Click Path
+### 1:30 – 1:45 — FEED-D: `SIGNATURE_CORRUPTED`
+"Feed D has marker-like bytes, but degradation — noise, partial loss — prevents verification. That's expected behavior on contested analog video. We flag it for the operator instead of forcing a decision."
 
-1. Open the BlueMark FPV dashboard.
-2. Confirm three feed panels are visible: Feed A, Feed B, Feed C.
-3. Start or reset the demo sequence.
-4. Point to Feed A: status should be `Friendly Verified`.
-5. Point to Feed B: status should be `Unknown`.
-6. Point to Feed C: status should be `Signature Corrupted / Needs Human Review`.
-7. Point to confidence, signal quality, and the persistent human decision warning.
-8. If available, toggle degradation or spoof view only after the MVP flow is shown.
+### 1:45 – 2:15 — FEED-E: `POSSIBLE_SPOOF`
+"Feed E has marker-like data that fails authentication or freshness. This is the spoof path. The system flags suspicion; it does not flag *engage*. A captured drone replaying yesterday's marker, or an adversary forging the byte pattern without the HMAC key, lands here — not on a kill list."
+
+### 2:15 – 2:45 — Safety + scaling
+"Every card carries the same persistent footer — *Identification aid only. Human decision required.* That's a hardware-event constraint, not a preference. On scaling: marker generation is a software change to firmware that's already flying; the per-drone marginal cost is zero. Receiver-side runs on hardware EW teams already carry. Edge-on-edge. No cloud, no central server, works disconnected and EW-contested."
+
+### 2:45 – 3:00 — Close
+"The novel contribution isn't VBI watermarking, isn't HMAC, isn't IFF — those are decades-proven prior art. It's the *combination*, applied to live FPV analog video on a flight controller, for real-time IFF at zero hardware cost. That's the gap we close, on equipment that's already in the field today."
+
+## Step-by-Step Click Path (5 feeds)
+
+1. Open the BlueMark FPV dashboard at `http://localhost:5174/`.
+2. Confirm five feed cards render: FEED-A through FEED-E, each with a distinct state color.
+3. Walk left-to-right: A → B → C → D → E, one beat per card per the script above.
+4. On every card, point to: state badge, confidence number, signals_used list, and the persistent footer.
+5. Close on the persistent footer + the prior-art-delta sentence.
 
 ## What To Say For Each State
 
-- `Friendly Verified`: "The marker sequence is valid across enough windows. This suggests friendly, but it is still only an identification aid."
-- `Unknown`: "No valid marker was found. The system does not guess; it leaves this feed unknown."
-- `Signature Corrupted`: "Marker-like data exists, but degradation prevents verification. The operator needs to review it."
-- `Possible Spoof`: "The feed has marker-like data, but timing or authentication checks fail. This should be treated as suspicious, not automatically acted on."
+- `FRIENDLY_VERIFIED`: "Marker authenticated, fresh, mission-matched, with at least one supporting signal. Aid only."
+- `LIKELY_FRIENDLY`: "Marker valid but uncorroborated. We refuse to promote it — false-friendly is the worst error we can make."
+- `UNKNOWN_NEEDS_REVIEW`: "No marker. Unknown is not foe."
+- `SIGNATURE_CORRUPTED`: "Marker bytes present, too noisy to verify. Operator reviews."
+- `POSSIBLE_SPOOF`: "Marker pattern present, authentication or freshness fails. Suspicious, not actionable."
 
 ## 30-Second Emergency Version
 

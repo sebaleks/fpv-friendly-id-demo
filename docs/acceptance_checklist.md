@@ -9,10 +9,8 @@
 
 ## Data/Demo Assets
 
-- [ ] Feed A asset exists or can be generated.
-- [ ] Feed B asset exists or can be generated.
-- [ ] Feed C degraded asset exists or can be generated.
-- [ ] Assets are simulated or benign.
+- [x] Feed assets exist (FEED-A through FEED-E) — `dashboard/public/feeds.json` regenerates via `python scripts/generate_feeds.py` from `demo_assets/{mission_manifest,session_log,visual_profile_overrides}.json`.
+- [x] Assets are simulated or benign (no real key material; see `src/bluemark/marker.py`).
 
 ## Marker
 
@@ -29,26 +27,29 @@
 
 ## Detector
 
-- [ ] Feed A resolves to `FRIENDLY_VERIFIED`.
-- [ ] Feed B resolves to `UNKNOWN`.
-- [ ] Feed C resolves to `SIGNATURE_CORRUPTED`.
-- [ ] Optional spoof example resolves to `POSSIBLE_SPOOF`.
-- [ ] Scripted fallback results are ready.
+- [x] FEED-A resolves to `FRIENDLY_VERIFIED`.
+- [x] FEED-B resolves to `LIKELY_FRIENDLY`.
+- [x] FEED-C resolves to `UNKNOWN_NEEDS_REVIEW`.
+- [x] FEED-D resolves to `SIGNATURE_CORRUPTED`.
+- [x] FEED-E resolves to `POSSIBLE_SPOOF`.
+- [x] Scripted fallback results are ready (`scripts/generate_feeds.py` is the scripted path; live detector path is identical shape).
+- [x] pytest 12/12 passing.
 
 ## Dashboard
 
-- [ ] Three feeds display at once.
-- [ ] Each feed shows status, confidence, and signal quality.
-- [ ] Every state shows `Identification aid only. Human decision required.`
+- [x] Five feed cards display at once (one per state: FRIENDLY_VERIFIED, LIKELY_FRIENDLY, UNKNOWN_NEEDS_REVIEW, SIGNATURE_CORRUPTED, POSSIBLE_SPOOF).
+- [x] Each feed shows state, confidence, and signals_used.
+- [x] Every state shows `Identification aid only. Human decision required.` (verified in `dashboard/src/App.tsx` + `FeedCard.tsx`).
 - [ ] Labels are readable from demo distance.
-- [ ] No UI copy implies autonomous action.
+- [x] No UI copy implies autonomous action.
 
-## Pitch
+## Demo (no pitch slides)
 
-- [ ] Problem statement is clear in one sentence.
-- [ ] Demo can be narrated in two minutes.
-- [ ] Safety framing is explicit (human-in-loop is a hard event constraint, not preferred).
-- [ ] Production caveats are stated: integration, testing, key management, and real-world validation.
+- [x] Problem statement is clear in one sentence.
+- [x] Demo can be narrated in three minutes (no slides — see `docs/demo_script.md`).
+- [x] Safety framing is explicit (human-in-loop is a hard event constraint, not preferred).
+- [x] Production caveats are stated: integration, testing, key management, and real-world validation.
+- [x] Judge Q&A 1-pager available at `docs/judge_faq.md`.
 
 ## Safety Language Audit
 

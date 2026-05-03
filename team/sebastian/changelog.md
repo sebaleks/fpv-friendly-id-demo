@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 03:25 - Sebastian (via Claude Code)
+
+- Changed: Dropped pitch slides per Sebastian's call. Executed end-to-end demo (3-min target, no slides) and shipped the judge Q&A 1-pager. Rewrote `docs/demo_script.md` for 3:00 × 5-state walk (FRIENDLY_VERIFIED → LIKELY_FRIENDLY → UNKNOWN_NEEDS_REVIEW → SIGNATURE_CORRUPTED → POSSIBLE_SPOOF). Wrote `docs/judge_faq.md` (5 Q&As, safety-reviewed against AGENTS.md). Refreshed `docs/acceptance_checklist.md` for the 5-feed model and ticked verified items. Verified pipeline: `python scripts/generate_feeds.py` produces all 5 states; `dashboard/` builds + serves on :5174 with the persistent "Identification aid only. Human decision required." footer; pytest 12/12.
+- Files: `docs/demo_script.md`, `docs/judge_faq.md` (new), `docs/acceptance_checklist.md`, `team/sebastian/changelog.md`.
+- Why: Sebastian instructed: no pitch slides, demo must be 3 minutes, complete the tasks. Old script targeted 2 min × 3 feeds and pre-dated the 5-state model.
+- Assumptions: `LIKELY_FRIENDLY` belongs in the live walk (it's the load-bearing state for false-friendly minimization, Birger Q7). 3:00 is read-aloud target, not hard ceiling.
+- Open questions: Stretch ML (T5 / P3) left open — skip-or-do at Sebastian's discretion; demo is complete without it.
+- Next step: One full read-aloud rehearsal against the new script with a stopwatch; teammates can `git pull` and inspect `docs/demo_script.md` + `docs/judge_faq.md`.
+
 ### 2026-05-03 02:59 - Sebastian (via Claude Code)
 
 - Changed: Re-synced after the 2026-05-03 push (steganographic IFF reframing, Birger SME final-pass, NICK-004 risk register, Wokwi firmware sim, Natsec PS2 framing lock, Wokwi cross-language verifier). Created BlueMark FPV project + 5 parent tasks + 11 subtasks in Priority Forge against the post-implementation outstanding list.

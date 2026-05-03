@@ -8,8 +8,6 @@ import TacticalMap from "./components/TacticalMap";
 
 type Density = "compact" | "comfortable" | "spacious";
 
-// Cycle order for the Z-key demo state flip. Hits all 5 fusion states
-// in severity order so each press shows a distinct transition.
 const STATE_CYCLE: FusionState[] = [
   "FRIENDLY_VERIFIED",
   "LIKELY_FRIENDLY",
@@ -18,11 +16,6 @@ const STATE_CYCLE: FusionState[] = [
   "POSSIBLE_SPOOF",
 ];
 
-// Per-state simulated payload — confidence, signal trace, and reason all
-// flip together so the detail view, signal trace, list status, and map
-// marker stay coherent when the presenter cycles a feed live.
-// Signal IDs match ALL_SIGNALS in stateMeta.ts (canonical) plus the
-// firmware_marker_mismatch failure variant for SIGNATURE_CORRUPTED.
 const STATE_SIM: Record<FusionState, { confidence: number; signals_used: string[]; reason: string }> = {
   FRIENDLY_VERIFIED: {
     confidence: 0.95,
@@ -51,9 +44,6 @@ const STATE_SIM: Record<FusionState, { confidence: number; signals_used: string[
   },
 };
 
-// Synthesize a NO_SIGNAL placeholder for a declared friendly that has no
-// feed entry. Birger flagged real-world feed loss (~50% throughput); the
-// dashboard infers absence from manifest∖feeds.
 function synthNoSignal(feed_id: string): DisplayFeed {
   return {
     feed_id,
@@ -64,6 +54,18 @@ function synthNoSignal(feed_id: string): DisplayFeed {
   };
 }
 
+// Demo-only: per-feed real-world coordinates anchoring markers to SF
+// landmarks. Production would carry these on the FusionResult itself.
+const FEED_LATLNG: Record<string, { lat: number; lng: number; place: string }> = {
+  "FEED-A": { lat: 37.80195, lng: -122.4063, place: "Telegraph Hill" },
+  "FEED-B": { lat: 37.8087, lng: -122.4098, place: "Pier 39" },
+  "FEED-C": { lat: 37.7948, lng: -122.3995, place: "Embarcadero Center" },
+  "FEED-D": { lat: 37.7952, lng: -122.4028, place: "Transamerica Pyramid" },
+  "FEED-F": { lat: 37.8024, lng: -122.4058, place: "Coit Tower" },
+  "FEED-G": { lat: 37.80647, lng: -122.4063, place: "Russian Hill" },
+  "FEED-H": { lat: 37.7955, lng: -122.3937, place: "Ferry Building" },
+};
+
 export default function App() {
   const [bundle, setBundle] = useState<FeedsBundle | null>(null);
   const [manifest, setManifest] = useState<MissionManifest | null>(null);
@@ -72,8 +74,9 @@ export default function App() {
   const [sort, setSort] = useState<SortMode>("severity");
   const [density, setDensity] = useState<Density>("comfortable");
   const [showVideo, setShowVideo] = useState(true);
-  // Demo-only: per-feed state overrides driven by Shift+<letter>. Lets the
-  // presenter flip a feed live so judges see the state-change animation.
+  // Map maximize state — when true, the tactical map covers the whole main
+  // pane as a fullscreen overlay (map-first console mode). Esc dismisses.
+  const [mapMaximized, setMapMaximized] = useState(false);
   const [stateOverrides, setStateOverrides] = useState<Record<string, FusionState>>({});
 
   useEffect(() => {
@@ -87,29 +90,26 @@ export default function App() {
       .catch(() => setManifest(null));
   }, []);
 
-  // Hotkeys:
-  //   A–I → select FEED-<letter>
-  //   Z   → cycle the currently selected feed's state forward (demo flip)
-  //   X   → cycle the currently selected feed's state backward
-  //   Esc → back to overview
-  // Skips when an input/select/textarea has focus so toolbar selects keep working.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const tag = (e.target as HTMLElement | null)?.tagName;
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
-      if (e.key === "Escape") { setSelectedId(null); return; }
+      if (e.key === "Escape") {
+        // Esc precedence: dismiss maximized map first, then deselect feed.
+        if (mapMaximized) { setMapMaximized(false); return; }
+        setSelectedId(null);
+        return;
+      }
       const k = e.key.toUpperCase();
-      if (k === "Z" || k === "X") {
+      if (k === "Z") {
         if (!selectedId) return;
         e.preventDefault();
-        const dir = k === "Z" ? 1 : -1;
         setStateOverrides((prev) => {
           const baseline = bundle?.feeds.find((f) => f.feed_id === selectedId)?.state;
           const current = prev[selectedId] ?? baseline ?? STATE_CYCLE[0];
           const idx = STATE_CYCLE.indexOf(current as FusionState);
-          const len = STATE_CYCLE.length;
-          const next = STATE_CYCLE[(idx + dir + len) % len];
+          const next = STATE_CYCLE[(idx + 1) % STATE_CYCLE.length];
           return { ...prev, [selectedId]: next };
         });
         return;
@@ -120,11 +120,8 @@ export default function App() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [bundle, selectedId]);
+  }, [bundle, selectedId, mapMaximized]);
 
-  // Merge real feeds with synthesized NO_SIGNAL rows for declared friendlies
-  // that never showed up in feeds.json. Demo state overrides (Shift+<letter>)
-  // are applied last so the presenter can flip a feed live.
   const merged: DisplayFeed[] = useMemo(() => {
     if (!bundle) return [];
     const real: DisplayFeed[] = bundle.feeds;
@@ -133,15 +130,16 @@ export default function App() {
     const synth = declared.filter((id) => !seen.has(id)).map(synthNoSignal);
     const all = [...real, ...synth];
     return all.map((f) => {
+      const geo = FEED_LATLNG[f.feed_id];
+      const withGeo = geo ? { ...f, ...geo } : f;
       const ov = stateOverrides[f.feed_id];
-      if (!ov) return f;
+      if (!ov) return withGeo;
       const sim = STATE_SIM[ov];
-      return { ...f, state: ov, confidence: sim.confidence, signals_used: sim.signals_used, reason: sim.reason };
+      return { ...withGeo, state: ov, confidence: sim.confidence, signals_used: sim.signals_used, reason: sim.reason };
     });
   }, [bundle, manifest, stateOverrides]);
 
   if (error) {
-    // NICK-047: distinguish 404 (likely missing file) from parse / network errors.
     const isMissing = /HTTP 404/.test(error);
     return (
       <div className="app-error">
@@ -157,9 +155,12 @@ export default function App() {
   const sorted = sortFeeds(merged, sort);
   const selected = selectedId ? sorted.find((f) => f.feed_id === selectedId) ?? null : null;
   const reviewCount = merged.filter((f) => NEEDS_REVIEW.has(f.state)).length;
-
   const generatedTime = new Date(bundle.generated_at * 1000).toLocaleTimeString();
 
+  // Layout shape:
+  //   no selection → main pane is split into [map-first | overview-rail]
+  //   selection    → main pane is split into [FeedDetail | docked map]
+  //   maximized    → map covers main pane as fullscreen overlay
   return (
     <div className="app">
       <header className="app-bar">
@@ -172,8 +173,6 @@ export default function App() {
           <span><span className="app-bar-warn">{reviewCount}</span> review</span>
           <span>{merged.length - reviewCount} verified</span>
           <span>{generatedTime}</span>
-          {/* Mission Control button — returns to overview. Highlighted when a
-              feed is selected (i.e. there's somewhere to navigate back to). */}
           <button
             className={`app-bar-mc ${selected ? "app-bar-mc-active" : ""}`}
             onClick={() => setSelectedId(null)}
@@ -215,17 +214,50 @@ export default function App() {
           </div>
         </aside>
 
-        <main className="app-main">
-          {selected
-            ? <FeedDetail feed={selected} showVideo={showVideo} />
-            : <MissionOverview feeds={sorted} manifest={manifest} generatedAt={bundle.generated_at} onPick={setSelectedId} />
-          }
-          {/* Floating tactical map — bottom-right. Selection syncs both ways. */}
-          <TacticalMap
-            feeds={merged}
-            selectedId={selectedId}
-            onPick={setSelectedId}
-          />
+        <main className={`app-main ${selected ? "app-main-detail" : "app-main-overview"}`}>
+          {selected ? (
+            <>
+              <div className="app-detail">
+                <FeedDetail feed={selected} showVideo={showVideo} />
+              </div>
+              <div className="app-map-dock">
+                <TacticalMap
+                  feeds={merged}
+                  selectedId={selectedId}
+                  onPick={setSelectedId}
+                  mode="docked"
+                  onMaximize={() => setMapMaximized(true)}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="app-overview-rail app-overview-left">
+                <MissionOverview feeds={sorted} manifest={manifest} generatedAt={bundle.generated_at} onPick={setSelectedId} />
+              </div>
+              <div className="app-map-dock">
+                <TacticalMap
+                  feeds={merged}
+                  selectedId={selectedId}
+                  onPick={setSelectedId}
+                  mode="docked"
+                  onMaximize={() => setMapMaximized(true)}
+                />
+              </div>
+            </>
+          )}
+
+          {mapMaximized && (
+            <div className="app-map-fullscreen" role="dialog" aria-label="Tactical map (maximized)">
+              <TacticalMap
+                feeds={merged}
+                selectedId={selectedId}
+                onPick={setSelectedId}
+                mode="fullscreen"
+                onMinimize={() => setMapMaximized(false)}
+              />
+            </div>
+          )}
         </main>
       </div>
 

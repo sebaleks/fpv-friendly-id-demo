@@ -147,8 +147,6 @@ button { font-family: inherit; }
   font-family: var(--mono); font-size: 11px; padding: 3px 6px; cursor: pointer;
 }
 
-.app-main { position: relative; overflow: auto; }
-
 .app-foot {
   display: flex; justify-content: space-between; align-items: center; gap: 16px;
   padding: 10px 18px;
@@ -251,13 +249,119 @@ button { font-family: inherit; }
 }
 
 /* ─── FeedDetail ─────────────────────────────────── */
-.fd { padding: 24px; padding-bottom: 280px; /* room for floating map */ }
-.fd-head { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px; }
+.fd { padding: 24px; }
+.fd-head { display: flex; align-items: stretch; gap: 20px; margin-bottom: 20px; }
 .fd-video {
   width: 240px; height: 160px; border-radius: 4px; flex: 0 0 auto;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
 }
-.fd-titles { flex: 1; min-width: 0; }
+.fd-titles { flex: 1; min-width: 0; align-self: flex-start; }
+
+/* Confidence — big prominent readout, right of video. Replaces the
+   old fill-bar — the number IS the readout. */
+.fd-confidence {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+  min-width: 180px;
+  padding: 16px 20px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--edge-light);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 var(--edge-light-strong), inset 0 -1px 0 var(--edge-dark);
+}
+.fd-confidence-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.4px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 6px;
+}
+.fd-confidence-value {
+  display: flex; align-items: baseline; gap: 2px;
+  font-family: var(--mono); font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+  text-shadow: 0 0 24px rgba(77,143,245,0.25);
+  transition: color 280ms ease, text-shadow 280ms ease;
+}
+.fd-confidence-num { font-size: 76px; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+.fd-confidence-pct { font-size: 28px; color: var(--ink-2); margin-left: 4px; }
+.fd-confidence-dash { font-size: 76px; color: var(--muted); }
+
+.fd-state-friendly_verified  .fd-confidence-value { color: var(--verified); text-shadow: 0 0 28px rgba(77,143,245,0.45); }
+.fd-state-likely_friendly    .fd-confidence-value { color: var(--accent);   text-shadow: 0 0 24px rgba(77,143,245,0.30); }
+.fd-state-unknown_needs_review .fd-confidence-value,
+.fd-state-signature_corrupted  .fd-confidence-value { color: var(--warn);   text-shadow: 0 0 24px rgba(198,154,58,0.40); }
+.fd-state-possible_spoof     .fd-confidence-value { color: var(--danger);  text-shadow: 0 0 28px rgba(213,72,72,0.50); }
+.fd-state-no_signal          .fd-confidence-value { color: var(--muted);   text-shadow: none; }
+
+/* ─── Countermeasures ─────────────────────────────── */
+.fd-countermeasures { margin-bottom: 24px; }
+.fd-cm-hint {
+  color: var(--muted);
+  font-size: 9px; letter-spacing: 0.6px;
+  text-transform: none;
+}
+.fd-cm-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.fd-cm {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer; text-align: left;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--edge-light);
+  border-left: 2px solid transparent;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 var(--edge-light-strong), inset 0 -1px 0 var(--edge-dark);
+  color: var(--ink);
+  transition: background 180ms ease, border-color 180ms ease, transform 120ms ease, box-shadow 180ms ease;
+}
+.fd-cm:hover:not(:disabled) {
+  background: var(--glass-strong);
+  box-shadow: inset 0 1px 0 var(--edge-light-strong), inset 0 -1px 0 var(--edge-dark), 0 6px 18px rgba(0,0,0,0.4);
+}
+.fd-cm:active:not(:disabled) { transform: translateY(1px); }
+.fd-cm:disabled { opacity: 0.4; cursor: not-allowed; }
+.fd-cm-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; flex: 0 0 auto;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.fd-cm-body { display: flex; flex-direction: column; min-width: 0; }
+.fd-cm-name {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.6px;
+  text-transform: uppercase; color: var(--ink); font-weight: 600;
+}
+.fd-cm-sub {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.6px;
+  color: var(--muted); margin-top: 3px; text-transform: uppercase;
+}
+.fd-cm-jam { border-left-color: rgba(198,154,58,0.55); }
+.fd-cm-jam .fd-cm-icon { color: var(--warn); }
+.fd-cm-jam:hover:not(:disabled) {
+  border-color: rgba(198,154,58,0.4);
+  border-left-color: var(--warn);
+  box-shadow: inset 0 1px 0 var(--edge-light-strong), 0 0 18px rgba(198,154,58,0.22);
+}
+.fd-cm-energy { border-left-color: rgba(77,143,245,0.55); }
+.fd-cm-energy .fd-cm-icon { color: var(--accent); }
+.fd-cm-energy:hover:not(:disabled) {
+  border-color: rgba(77,143,245,0.4);
+  border-left-color: var(--accent);
+  box-shadow: inset 0 1px 0 var(--edge-light-strong), 0 0 18px rgba(77,143,245,0.28);
+}
+.fd-cm-kinetic { border-left-color: rgba(213,72,72,0.55); }
+.fd-cm-kinetic .fd-cm-icon { color: var(--danger); }
+.fd-cm-kinetic:hover:not(:disabled) {
+  border-color: rgba(213,72,72,0.4);
+  border-left-color: var(--danger);
+  box-shadow: inset 0 1px 0 var(--edge-light-strong), 0 0 18px rgba(213,72,72,0.28);
+}
 .fd-state { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; color: var(--ink-2); margin-bottom: 4px; }
 .fd-id { font-family: var(--mono); font-size: 22px; color: var(--ink); font-weight: 500; letter-spacing: 0.3px; }
 .fd-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 6px; }
@@ -401,7 +505,7 @@ button { font-family: inherit; }
 .fd-btn-primary:hover { filter: brightness(1.08); }
 
 /* ─── MissionOverview ──────────────────────────────── */
-.mo { padding: 24px; padding-bottom: 280px; /* room for floating map */ }
+.mo { padding: 24px; }
 .mo-eyebrow {
   display: flex; justify-content: space-between;
   font-family: var(--mono); font-size: 10px; letter-spacing: 1.4px;
@@ -504,44 +608,91 @@ button { font-family: inherit; }
 .mo-event-danger .mo-event-msg { color: var(--danger); }
 .mo-event-dim .mo-event-msg { color: var(--ink-2); }
 
-/* ─── Tactical Map (floating, bottom-right) ─────── */
+/* ─── Main pane layouts ────────────────────────────
+   Two split modes plus a fullscreen overlay:
+   - overview  → [map-primary | overview-rail]
+   - detail    → [feed-detail | map-dock]
+   - maximized → fullscreen overlay covers main pane */
+.app-main { position: relative; overflow: hidden; }
+.app-main-overview { display: grid; grid-template-columns: 1fr minmax(380px, 460px); }
+/* Overview-left puts the mission rail on the LEFT (1fr) and the docked map
+   in the right rail. Removes the rail-style left border that was meant for
+   a right-side rail. */
+.app-overview-left { border-left: none; border-right: 1px solid var(--border); }
+.app-main-detail   { display: grid; grid-template-columns: 1fr minmax(380px, 460px); }
+
+.app-detail { overflow: auto; }
+.app-detail .fd { padding-bottom: 32px; }
+.app-overview-rail { overflow: auto; border-left: 1px solid var(--border); background: rgba(16,20,28,0.3); }
+.app-overview-rail .mo { padding-bottom: 32px; }
+.app-map-primary { position: relative; overflow: hidden; }
+.app-map-dock { position: relative; overflow: hidden; border-left: 1px solid var(--border); }
+
+/* Fullscreen overlay — covers main pane only (sidebar + topbar stay) */
+.app-map-fullscreen {
+  position: absolute; inset: 0; z-index: 50;
+  background: rgba(4, 8, 16, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: app-map-fade 180ms ease-out;
+}
+@keyframes app-map-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Tactical Map ──────────────────────────────────
+   Three modes — primary (fills container), docked (right column),
+   fullscreen (modal overlay). All share the same body/markers. */
 .tmap {
-  position: absolute; right: 18px; bottom: 18px;
-  width: 340px; height: 260px;
-  z-index: 20;
+  display: flex; flex-direction: column;
+  height: 100%; width: 100%;
   background: var(--glass-strong);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--edge-light);
-  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.tmap-primary { border: none; border-radius: 0; }
+.tmap-docked  { border: none; border-radius: 0; }
+.tmap-fullscreen {
+  position: absolute; inset: 16px;
+  border-radius: 10px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.20),
     inset 0 -1px 0 rgba(0,0,0,0.5),
-    0 12px 32px rgba(0,0,0,0.55),
-    0 0 0 1px rgba(255,255,255,0.06);
-  overflow: hidden;
-  transition: width 200ms ease, height 200ms ease;
+    0 24px 64px rgba(0,0,0,0.7);
+  animation: tmap-fs-pop 220ms ease-out;
 }
-.tmap-collapsed { width: 220px; height: 38px; }
+@keyframes tmap-fs-pop {
+  from { transform: scale(0.96); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
 
 .tmap-head {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 12px;
+  padding: 10px 14px; flex: 0 0 auto;
   border-bottom: 1px solid var(--border);
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-2);
 }
-.tmap-collapsed .tmap-head { border-bottom: none; }
 .tmap-title { display: flex; align-items: center; gap: 8px; }
 .tmap-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 6px var(--accent); }
 .tmap-zone { color: var(--muted); letter-spacing: 0.4px; text-transform: none; }
+.tmap-actions { display: flex; gap: 4px; }
 .tmap-toggle {
-  background: transparent; border: none; color: var(--muted);
-  cursor: pointer; font-family: inherit; font-size: 10px;
-  padding: 2px 6px; letter-spacing: 0.6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.04); color: var(--ink-2);
+  border: 1px solid var(--border-strong); border-radius: 3px;
+  cursor: pointer; padding: 4px 6px;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
 }
+.tmap-toggle:hover { color: var(--ink); border-color: var(--accent-dim); background: rgba(255,255,255,0.07); }
 
-.tmap-body { position: relative; width: 100%; height: calc(100% - 30px); }
+.tmap-body { position: relative; flex: 1 1 auto; min-height: 0; }
 
 .tmap-terrain {
   position: absolute; inset: 0;
@@ -686,3 +837,49 @@ button { font-family: inherit; }
   border-color: var(--muted);
   box-shadow: 0 0 6px rgba(155,163,175,0.3);
 }
+
+/* ─── Tactical map — D upgrades ──────────────────────
+   Heading chevron, threat range rings, bearing/distance readout,
+   and hover marker label. */
+.tmap-chevron {
+  position: absolute; left: 50%; top: 50%;
+  width: 70%; height: 70%;
+  color: var(--accent);
+  filter: drop-shadow(0 0 4px rgba(77,143,245,0.5));
+  transform-origin: center;
+  transition: transform 320ms ease, color 320ms ease;
+  pointer-events: none;
+}
+.tmap-marker-friendly.tmap-marker-selected .tmap-chevron { width: 80%; height: 80%; }
+
+.tmap-marker-hovered .tmap-glyph,
+.tmap-marker-hovered .tmap-chevron { filter: brightness(1.3) drop-shadow(0 0 6px currentColor); }
+.tmap-marker-hovered .tmap-marker-label,
+.tmap-marker-selected .tmap-marker-label { opacity: 1; }
+.tmap-marker-label { opacity: 0; transition: opacity 160ms ease; }
+
+/* Threat range rings — slow pulse so they read as live, not static. */
+.tmap-threat-ring { animation: tmap-threat-pulse 3.2s ease-in-out infinite; transform-origin: center; }
+@keyframes tmap-threat-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* Bearing/distance HUD pill — top-left of map body. */
+.tmap-readout {
+  position: absolute; left: 12px; top: 12px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(120,170,255,0.25);
+  border-radius: 3px;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.5px; color: var(--ink);
+  pointer-events: none;
+}
+.tmap-readout-id   { color: var(--ink); font-weight: 600; }
+.tmap-readout-grid { color: var(--ink-2); }
+.tmap-readout-brg, .tmap-readout-dist { color: var(--accent); }
+.tmap-readout-sep  { color: var(--muted); }

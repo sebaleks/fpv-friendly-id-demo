@@ -24,6 +24,12 @@ export interface FusionResult {
   callsign?: string;
   grid?: string;
   last_seen_s?: number;
+  // Real-world telemetry (optional). When present, the tactical map projects
+  // the marker via lat/lng instead of falling back to MGRS or hash scatter.
+  lat?: number;
+  lng?: number;
+  place?: string;
+  heading_deg?: number;
 }
 
 // What components actually render. Real feeds widen trivially; synthesized

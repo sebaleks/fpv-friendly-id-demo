@@ -1,31 +1,36 @@
-import type { FusionState } from "../types";
+import type { DisplayState } from "../types";
 
-export const STATE_LABEL: Record<FusionState, string> = {
+export const STATE_LABEL: Record<DisplayState, string> = {
   FRIENDLY_VERIFIED: "Friendly · Verified",
   LIKELY_FRIENDLY: "Likely Friendly",
   UNKNOWN_NEEDS_REVIEW: "Unknown · Review",
   SIGNATURE_CORRUPTED: "Signature Corrupted",
   POSSIBLE_SPOOF: "Possible Spoof",
+  NO_SIGNAL: "No Signal",
 };
 
 // Triage severity — higher = more urgent.
-export const STATE_SEVERITY: Record<FusionState, number> = {
+// NO_SIGNAL ranks alongside UNKNOWN_NEEDS_REVIEW: declared friendly absent
+// from feeds is operationally anomalous, but not red-alert like a spoof.
+export const STATE_SEVERITY: Record<DisplayState, number> = {
   POSSIBLE_SPOOF: 4,
   SIGNATURE_CORRUPTED: 3,
   UNKNOWN_NEEDS_REVIEW: 2,
+  NO_SIGNAL: 2,
   LIKELY_FRIENDLY: 1,
   FRIENDLY_VERIFIED: 0,
 };
 
-export const NEEDS_REVIEW = new Set<FusionState>([
+export const NEEDS_REVIEW = new Set<DisplayState>([
   "POSSIBLE_SPOOF",
   "SIGNATURE_CORRUPTED",
   "UNKNOWN_NEEDS_REVIEW",
+  "NO_SIGNAL",
 ]);
 
 export type SortMode = "severity" | "feed_id" | "confidence";
 
-export function sortFeeds<T extends { state: FusionState; confidence: number; feed_id: string }>(
+export function sortFeeds<T extends { state: DisplayState; confidence: number; feed_id: string }>(
   feeds: T[],
   mode: SortMode
 ): T[] {

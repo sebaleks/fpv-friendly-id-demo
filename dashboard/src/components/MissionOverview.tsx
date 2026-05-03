@@ -1,17 +1,18 @@
-import type { FusionResult, MissionManifest, FusionState } from "../types";
+import type { DisplayFeed, MissionManifest, DisplayState } from "../types";
 import { STATE_LABEL, NEEDS_REVIEW } from "./stateMeta";
 
 interface Props {
-  feeds: FusionResult[];
+  feeds: DisplayFeed[];
   manifest: MissionManifest | null;
   generatedAt: number;
   onPick: (id: string) => void;
 }
 
-const STATE_ORDER: FusionState[] = [
+const STATE_ORDER: DisplayState[] = [
   "POSSIBLE_SPOOF",
   "SIGNATURE_CORRUPTED",
   "UNKNOWN_NEEDS_REVIEW",
+  "NO_SIGNAL",
   "LIKELY_FRIENDLY",
   "FRIENDLY_VERIFIED",
 ];
@@ -33,7 +34,7 @@ export default function MissionOverview({ feeds, manifest, generatedAt, onPick }
   const total = feeds.length;
   const reviewCount = feeds.filter((f) => NEEDS_REVIEW.has(f.state)).length;
 
-  const dist: Partial<Record<FusionState, number>> = {};
+  const dist: Partial<Record<DisplayState, number>> = {};
   for (const f of feeds) dist[f.state] = (dist[f.state] || 0) + 1;
 
   const seenIds = new Set(feeds.map((f) => f.feed_id));

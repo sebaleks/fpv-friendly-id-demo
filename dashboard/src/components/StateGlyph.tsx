@@ -1,6 +1,6 @@
-import type { FusionState } from "../types";
+import type { DisplayState } from "../types";
 
-export default function StateGlyph({ state, size = 10, color }: { state: FusionState; size?: number; color?: string }) {
+export default function StateGlyph({ state, size = 10, color }: { state: DisplayState; size?: number; color?: string }) {
   const c = color || "currentColor";
   const common = { width: size, height: size, display: "block" as const };
   if (state === "FRIENDLY_VERIFIED")
@@ -13,5 +13,7 @@ export default function StateGlyph({ state, size = 10, color }: { state: FusionS
     return <svg {...common} viewBox="0 0 10 10"><path d="M5 1 L9 9 L1 9 Z" fill="none" stroke={c} strokeWidth="1.5" /></svg>;
   if (state === "POSSIBLE_SPOOF")
     return <svg {...common} viewBox="0 0 10 10"><path d="M5 1 L9 9 L1 9 Z" fill={c} /></svg>;
+  if (state === "NO_SIGNAL")
+    return <svg {...common} viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="none" stroke={c} strokeWidth="1.5" strokeDasharray="1.5 1.2" /></svg>;
   return null;
 }

@@ -8,6 +8,11 @@ export type FusionState =
   | "SIGNATURE_CORRUPTED"
   | "POSSIBLE_SPOOF";
 
+// Display-only state: dashboard synthesizes a row for any drone declared in
+// the mission manifest that has no entry in feeds.json (lost feed / never
+// arrived). NOT part of the Python schema — UI-derived.
+export type DisplayState = FusionState | "NO_SIGNAL";
+
 export interface FusionResult {
   feed_id: string;
   state: FusionState;
@@ -19,6 +24,12 @@ export interface FusionResult {
   callsign?: string;
   grid?: string;
   last_seen_s?: number;
+}
+
+// What components actually render. Real feeds widen trivially; synthesized
+// NO_SIGNAL rows use this shape with state="NO_SIGNAL".
+export interface DisplayFeed extends Omit<FusionResult, "state"> {
+  state: DisplayState;
 }
 
 export interface FeedsBundle {

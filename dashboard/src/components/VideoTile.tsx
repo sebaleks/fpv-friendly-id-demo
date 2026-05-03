@@ -1,5 +1,3 @@
-import type { FusionResult } from "../types";
-
 // Stable hash → deterministic visual placeholder per feed.
 function feedHash(id: string): number {
   let h = 0;
@@ -8,7 +6,8 @@ function feedHash(id: string): number {
 }
 
 interface Props {
-  feed: FusionResult & { last_seen_s?: number };
+  // Only feed_id + last_seen_s are read; takes any feed-shaped row.
+  feed: { feed_id: string; last_seen_s?: number };
   accent?: string;
   showReticle?: boolean;
   className?: string;

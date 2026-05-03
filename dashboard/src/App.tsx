@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import type { FeedsBundle, FusionResult, MissionManifest } from "./types";
+import { useEffect, useMemo, useState } from "react";
+import type { FeedsBundle, DisplayFeed, MissionManifest } from "./types";
 import { sortFeeds, NEEDS_REVIEW, type SortMode } from "./components/stateMeta";
 import FeedListItem from "./components/FeedListItem";
 import FeedDetail from "./components/FeedDetail";
@@ -7,6 +7,19 @@ import MissionOverview from "./components/MissionOverview";
 import TacticalMap from "./components/TacticalMap";
 
 type Density = "compact" | "comfortable" | "spacious";
+
+// Synthesize a NO_SIGNAL placeholder for a declared friendly that has no
+// feed entry. Birger flagged real-world feed loss (~50% throughput); the
+// dashboard infers absence from manifest∖feeds.
+function synthNoSignal(feed_id: string): DisplayFeed {
+  return {
+    feed_id,
+    state: "NO_SIGNAL",
+    confidence: 0,
+    signals_used: [],
+    reason: "Declared friendly in mission manifest, no feed received. Cause unknown — link loss, downed airframe, or never launched.",
+  };
+}
 
 export default function App() {
   const [bundle, setBundle] = useState<FeedsBundle | null>(null);
@@ -28,6 +41,17 @@ export default function App() {
       .catch(() => setManifest(null));
   }, []);
 
+  // Merge real feeds with synthesized NO_SIGNAL rows for declared friendlies
+  // that never showed up in feeds.json. Memoized so list/map share identity.
+  const merged: DisplayFeed[] = useMemo(() => {
+    if (!bundle) return [];
+    const real: DisplayFeed[] = bundle.feeds;
+    const seen = new Set(real.map((f) => f.feed_id));
+    const declared = manifest?.friendly_drone_ids ?? [];
+    const synth = declared.filter((id) => !seen.has(id)).map(synthNoSignal);
+    return [...real, ...synth];
+  }, [bundle, manifest]);
+
   if (error) {
     // NICK-047: distinguish 404 (likely missing file) from parse / network errors.
     const isMissing = /HTTP 404/.test(error);
@@ -42,9 +66,9 @@ export default function App() {
   }
   if (!bundle) return <div className="app-loading">Loading feeds…</div>;
 
-  const sorted = sortFeeds(bundle.feeds, sort) as FusionResult[];
+  const sorted = sortFeeds(merged, sort);
   const selected = selectedId ? sorted.find((f) => f.feed_id === selectedId) ?? null : null;
-  const reviewCount = bundle.feeds.filter((f) => NEEDS_REVIEW.has(f.state)).length;
+  const reviewCount = merged.filter((f) => NEEDS_REVIEW.has(f.state)).length;
 
   const generatedTime = new Date(bundle.generated_at * 1000).toLocaleTimeString();
 
@@ -58,7 +82,7 @@ export default function App() {
         </div>
         <div className="app-bar-right">
           <span><span className="app-bar-warn">{reviewCount}</span> review</span>
-          <span>{bundle.feeds.length - reviewCount} verified</span>
+          <span>{merged.length - reviewCount} verified</span>
           <span>{generatedTime}</span>
           {/* Mission Control button — returns to overview. Highlighted when a
               feed is selected (i.e. there's somewhere to navigate back to). */}
@@ -110,7 +134,7 @@ export default function App() {
           }
           {/* Floating tactical map — bottom-right. Selection syncs both ways. */}
           <TacticalMap
-            feeds={bundle.feeds}
+            feeds={merged}
             selectedId={selectedId}
             onPick={setSelectedId}
           />

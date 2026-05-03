@@ -1,10 +1,10 @@
-import type { FusionResult } from "../types";
+import type { DisplayFeed } from "../types";
 import { STATE_LABEL, NEEDS_REVIEW, ALL_SIGNALS, classifySignal } from "./stateMeta";
 import StateGlyph from "./StateGlyph";
 import VideoTile from "./VideoTile";
 
 interface Props {
-  feed: FusionResult;
+  feed: DisplayFeed;
   showVideo: boolean;
   onClose: () => void;
 }
@@ -12,10 +12,12 @@ interface Props {
 export default function FeedDetail({ feed, showVideo, onClose }: Props) {
   const pct = Math.round(feed.confidence * 100);
   const isReview = NEEDS_REVIEW.has(feed.state);
+  const isNoSignal = feed.state === "NO_SIGNAL";
   const stateClass = `fd-state-${feed.state.toLowerCase()}`;
   const lastSeen = feed.last_seen_s ?? 0;
 
   // Full signal trace — every possible signal, marked PASS / FAIL / MISSING.
+  // For NO_SIGNAL all rows are MISSING by definition.
   const signalRows = ALL_SIGNALS.map((s) => ({
     ...s,
     status: classifySignal(feed.signals_used, s.id),
@@ -27,7 +29,8 @@ export default function FeedDetail({ feed, showVideo, onClose }: Props) {
   return (
     <div className={`fd ${stateClass} ${isReview ? "fd-review" : ""}`}>
       <div className="fd-head">
-        {showVideo && <VideoTile feed={feed} className="fd-video" showReticle />}
+        {showVideo && !isNoSignal && <VideoTile feed={feed} className="fd-video" showReticle />}
+        {showVideo && isNoSignal && <div className="fd-video fd-video-nosignal">NO SIGNAL</div>}
         <div className="fd-titles">
           <div className="fd-state">
             <StateGlyph state={feed.state} /> <span>{STATE_LABEL[feed.state]}</span>

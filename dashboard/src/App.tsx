@@ -89,7 +89,8 @@ export default function App() {
 
   // Hotkeys:
   //   A–I → select FEED-<letter>
-  //   Z   → cycle the currently selected feed's state (demo flip)
+  //   Z   → cycle the currently selected feed's state forward (demo flip)
+  //   X   → cycle the currently selected feed's state backward
   //   Esc → back to overview
   // Skips when an input/select/textarea has focus so toolbar selects keep working.
   useEffect(() => {
@@ -99,14 +100,16 @@ export default function App() {
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
       if (e.key === "Escape") { setSelectedId(null); return; }
       const k = e.key.toUpperCase();
-      if (k === "Z") {
+      if (k === "Z" || k === "X") {
         if (!selectedId) return;
         e.preventDefault();
+        const dir = k === "Z" ? 1 : -1;
         setStateOverrides((prev) => {
           const baseline = bundle?.feeds.find((f) => f.feed_id === selectedId)?.state;
           const current = prev[selectedId] ?? baseline ?? STATE_CYCLE[0];
           const idx = STATE_CYCLE.indexOf(current as FusionState);
-          const next = STATE_CYCLE[(idx + 1) % STATE_CYCLE.length];
+          const len = STATE_CYCLE.length;
+          const next = STATE_CYCLE[(idx + dir + len) % len];
           return { ...prev, [selectedId]: next };
         });
         return;

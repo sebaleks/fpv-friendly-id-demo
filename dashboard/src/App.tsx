@@ -37,7 +37,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sort, setSort] = useState<SortMode>("severity");
-  const [density, setDensity] = useState<Density>("compact");
+  const [density, setDensity] = useState<Density>("comfortable");
   const [showVideo, setShowVideo] = useState(true);
   // Demo-only: per-feed state overrides driven by Shift+<letter>. Lets the
   // presenter flip a feed live so judges see the state-change animation.
@@ -176,7 +176,7 @@ export default function App() {
 
         <main className="app-main">
           {selected
-            ? <FeedDetail feed={selected} showVideo={showVideo} onClose={() => setSelectedId(null)} />
+            ? <FeedDetail feed={selected} showVideo={showVideo} />
             : <MissionOverview feeds={sorted} manifest={manifest} generatedAt={bundle.generated_at} onPick={setSelectedId} />
           }
           {/* Floating tactical map — bottom-right. Selection syncs both ways. */}

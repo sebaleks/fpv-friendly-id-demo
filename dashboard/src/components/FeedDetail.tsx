@@ -6,10 +6,9 @@ import VideoTile from "./VideoTile";
 interface Props {
   feed: DisplayFeed;
   showVideo: boolean;
-  onClose: () => void;
 }
 
-export default function FeedDetail({ feed, showVideo, onClose }: Props) {
+export default function FeedDetail({ feed, showVideo }: Props) {
   const pct = Math.round(feed.confidence * 100);
   const isReview = NEEDS_REVIEW.has(feed.state);
   const isNoSignal = feed.state === "NO_SIGNAL";
@@ -42,10 +41,6 @@ export default function FeedDetail({ feed, showVideo, onClose }: Props) {
             <span> · {lastSeen === 0 ? "LIVE" : `T-${lastSeen}s`}</span>
           </div>
         </div>
-        {/* Labelled close — primary route back to mission control */}
-        <button className="fd-close" onClick={onClose} title="Back to Mission Control">
-          <span className="fd-close-arrow">←</span> Mission Control
-        </button>
       </div>
 
       <section className="fd-section">

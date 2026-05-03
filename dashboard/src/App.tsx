@@ -8,8 +8,8 @@ import TacticalMap from "./components/TacticalMap";
 
 type Density = "compact" | "comfortable" | "spacious";
 
-// Cycle order for Shift+<letter> demo state flips. Hits all 5 fusion states
-// in severity order so each Shift-press shows a distinct transition.
+// Cycle order for the Z-key demo state flip. Hits all 5 fusion states
+// in severity order so each press shows a distinct transition.
 const STATE_CYCLE: FusionState[] = [
   "FRIENDLY_VERIFIED",
   "LIKELY_FRIENDLY",
@@ -17,6 +17,39 @@ const STATE_CYCLE: FusionState[] = [
   "SIGNATURE_CORRUPTED",
   "POSSIBLE_SPOOF",
 ];
+
+// Per-state simulated payload — confidence, signal trace, and reason all
+// flip together so the detail view, signal trace, list status, and map
+// marker stay coherent when the presenter cycles a feed live.
+// Signal IDs match ALL_SIGNALS in stateMeta.ts (canonical) plus the
+// firmware_marker_mismatch failure variant for SIGNATURE_CORRUPTED.
+const STATE_SIM: Record<FusionState, { confidence: number; signals_used: string[]; reason: string }> = {
+  FRIENDLY_VERIFIED: {
+    confidence: 0.95,
+    signals_used: ["firmware_marker", "steg_iff_token", "manifest_match", "visual_classifier", "rc_session", "time_window", "hmac_verify"],
+    reason: "Marker authenticated and fresh, mission match, all supporting signals present.",
+  },
+  LIKELY_FRIENDLY: {
+    confidence: 0.68,
+    signals_used: ["firmware_marker", "manifest_match", "time_window", "hmac_verify"],
+    reason: "Marker authenticated and fresh with mission match, but no corroborating supporting signal.",
+  },
+  UNKNOWN_NEEDS_REVIEW: {
+    confidence: 0.20,
+    signals_used: [],
+    reason: "No valid friendly marker identified. Unknown is not foe — human review required.",
+  },
+  SIGNATURE_CORRUPTED: {
+    confidence: 0.42,
+    signals_used: ["firmware_marker_mismatch"],
+    reason: "Marker-like data present but too noisy or incomplete to verify.",
+  },
+  POSSIBLE_SPOOF: {
+    confidence: 0.10,
+    signals_used: ["firmware_marker", "steg_iff_token", "time_window"],
+    reason: "Marker decoded but HMAC verify failed. Possible adversary replay or spoof.",
+  },
+};
 
 // Synthesize a NO_SIGNAL placeholder for a declared friendly that has no
 // feed entry. Birger flagged real-world feed loss (~50% throughput); the
@@ -55,9 +88,9 @@ export default function App() {
   }, []);
 
   // Hotkeys:
-  //   A–I             → select FEED-<letter>
-  //   Shift + A–I     → cycle that feed's state (drives the transition animation)
-  //   Esc             → back to overview
+  //   A–I → select FEED-<letter>
+  //   Z   → cycle the currently selected feed's state (demo flip)
+  //   Esc → back to overview
   // Skips when an input/select/textarea has focus so toolbar selects keep working.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -66,25 +99,25 @@ export default function App() {
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
       if (e.key === "Escape") { setSelectedId(null); return; }
       const k = e.key.toUpperCase();
-      if (k.length !== 1 || k < "A" || k > "I") return;
-      const feedId = `FEED-${k}`;
-      if (e.shiftKey) {
+      if (k === "Z") {
+        if (!selectedId) return;
         e.preventDefault();
-        setSelectedId(feedId);
         setStateOverrides((prev) => {
-          const baseline = bundle?.feeds.find((f) => f.feed_id === feedId)?.state;
-          const current = prev[feedId] ?? baseline ?? STATE_CYCLE[0];
+          const baseline = bundle?.feeds.find((f) => f.feed_id === selectedId)?.state;
+          const current = prev[selectedId] ?? baseline ?? STATE_CYCLE[0];
           const idx = STATE_CYCLE.indexOf(current as FusionState);
           const next = STATE_CYCLE[(idx + 1) % STATE_CYCLE.length];
-          return { ...prev, [feedId]: next };
+          return { ...prev, [selectedId]: next };
         });
-      } else {
-        setSelectedId(feedId);
+        return;
+      }
+      if (k.length === 1 && k >= "A" && k <= "I") {
+        setSelectedId(`FEED-${k}`);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [bundle]);
+  }, [bundle, selectedId]);
 
   // Merge real feeds with synthesized NO_SIGNAL rows for declared friendlies
   // that never showed up in feeds.json. Demo state overrides (Shift+<letter>)
@@ -96,7 +129,12 @@ export default function App() {
     const declared = manifest?.friendly_drone_ids ?? [];
     const synth = declared.filter((id) => !seen.has(id)).map(synthNoSignal);
     const all = [...real, ...synth];
-    return all.map((f) => stateOverrides[f.feed_id] ? { ...f, state: stateOverrides[f.feed_id] } : f);
+    return all.map((f) => {
+      const ov = stateOverrides[f.feed_id];
+      if (!ov) return f;
+      const sim = STATE_SIM[ov];
+      return { ...f, state: ov, confidence: sim.confidence, signals_used: sim.signals_used, reason: sim.reason };
+    });
   }, [bundle, manifest, stateOverrides]);
 
   if (error) {
@@ -192,7 +230,7 @@ export default function App() {
         <span className="app-foot-canonical">Identification aid only. Human decision required. Not production IFF.</span>
         <span className="app-foot-tweaks">
           <span className="app-foot-hint">
-            <kbd>A</kbd>–<kbd>I</kbd> select · <kbd>Shift</kbd>+<kbd>A</kbd>–<kbd>I</kbd> cycle state · <kbd>Esc</kbd> overview
+            <kbd>A</kbd>–<kbd>I</kbd> select · <kbd>Esc</kbd> overview
           </span>
           <label><input type="checkbox" checked={showVideo} onChange={(e) => setShowVideo(e.target.checked)} /> video</label>
           <label>density:&nbsp;

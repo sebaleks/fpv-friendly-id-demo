@@ -36,7 +36,7 @@ Dashboard is a React + Vite SPA reading a static `feeds.json` (written by `scrip
 
 - Dashboard opens reliably.
 - All three feeds display with stable labels.
-- Detector or scripted detector output drives the four dashboard states.
+- Detector or scripted detector output drives the five dashboard states (`docs/dashboard_states.md`).
 - Feed status, confidence, signal quality, and warning are visible.
 - Presenter can complete the demo in two minutes.
 - No part of the demo implies autonomous targeting, engagement, or jamming recommendations.

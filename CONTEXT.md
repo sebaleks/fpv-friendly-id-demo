@@ -4,7 +4,7 @@ You are an AI agent helping a teammate work on **BlueMark FPV**. Read this file 
 
 ## Project
 
-BlueMark FPV is a hackathon proof-of-concept for friendly identification of cheap FPV drone video signals via an authenticated OSD-style marker plus a receiver-side dashboard. Four states: `Friendly Verified`, `Unknown`, `Corrupted`, `Possible Spoof`.
+BlueMark FPV is a hackathon proof-of-concept for friendly identification of cheap FPV drone video signals via a steganographic HMAC-authenticated marker (embedded in the unrendered VBI lines of the analog video) plus a receiver-side dashboard. **Five states:** `FRIENDLY_VERIFIED`, `LIKELY_FRIENDLY`, `UNKNOWN_NEEDS_REVIEW`, `SIGNATURE_CORRUPTED`, `POSSIBLE_SPOOF`.
 
 ## Safety boundary (hard line)
 

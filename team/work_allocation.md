@@ -1,6 +1,6 @@
 # BlueMark FPV Work Allocation
 
-Source: interview answers pasted on 2026-05-02. `team/interview_results/` currently contains only its README, so this plan uses the pasted answers as the active interview record.
+> **Updated 2026-05-03 (post-implementation push).** Original first-3-tasks lists are mostly done — see "Current state" notes per teammate below. The role definitions still hold.
 
 Team assistant folders:
 
@@ -11,63 +11,65 @@ Team assistant folders:
 
 ## Sebastian
 
-- Assigned role: Project coordinator, demo integrator, and detection support.
-- Why this fits: Sebastian has the most available time, is comfortable with Python and data science, and should keep integration decisions coherent.
-- Primary responsibilities: Keep scope controlled, maintain docs, coordinate handoffs, define demo acceptance criteria, support detection/noise work.
-- Secondary responsibilities: Help with test clips, simple scripts, dashboard copy, and final judging flow.
-- Owns: `README.md`, `HANDOFF.md`, `docs/`, `team/work_allocation.md`, `team/sebastian/`, future integration notes.
-- Coordinates with: Arpit on dashboard/API needs, Nicholas on detector outputs, Birger on domain accuracy and pitch framing.
-- Avoid unless coordinated: Deep frontend architecture, complex backend rewrites, teammate-owned suggestion files.
-- First 3 tasks:
-  1. Convert storyboard into a strict 3-minute demo script.
-  2. Define the exact dashboard status states and operator-facing copy.
-  3. Create a final integration checklist before feature work starts.
+- Assigned role: Project coordinator, demo integrator, pitch lead.
+- Why this fits: Sebastian has the most available time, is comfortable with Python and data science, and should keep integration decisions coherent. Has GPU access for ML stretch work.
+- Primary responsibilities: Pitch slides + narration, integration coordination, demo flow, final judging Q&A.
+- Owns: `README.md`, `HANDOFF.md`, `docs/`, `team/work_allocation.md`, `team/sebastian/`.
+- Avoid unless coordinated: Deep frontend changes, teammate-owned suggestion files.
+- **Current state (2026-05-03):**
+  - ✅ Demo planning docs (`docs/demo_plan.md`, `demo_script.md`, `acceptance_checklist.md`, `dashboard_states.md`).
+  - ✅ Cost-tier framing (`docs/cost_tiers.md`).
+  - ⏳ Pitch slides reflecting the steganographic / VBI framing (see `docs/steganographic_iff.md`) and the watermark-as-deployed-practice insight from Birger.
+  - ⏳ Optional ML stretch: wire real ONNX inference into `scripts/run_visual_classifier.py` (recommended: pretrained `doguilmak/Drone-Detection-YOLOv8x`). Demo runs without this — simulated values fall through.
+  - ⏳ End-to-end demo rehearsal.
 
 ## Arpit
 
-- Assigned role: Frontend/dashboard and app architecture lead.
-- Why this fits: Arpit has deep engineering experience, strong frontend background, backend/API experience, and expert Git comfort.
-- Primary responsibilities: Own the dashboard UX, state display, app shell, frontend/backend interface shape, and review integration quality.
-- Secondary responsibilities: Help define API contracts, keep the repo shippable, support Git workflow and PR reviews.
-- Owns: `team/arpit/`, future dashboard files, future API contract docs, future frontend app structure.
-- Coordinates with: Nicholas on detector result schema, Sebastian on demo flow and copy, Birger on domain language.
-- Avoid unless coordinated: Reframing the mission/pitch, changing detector behavior without Nicholas, editing Sebastian coordination docs without handoff.
-- First 3 tasks:
-  1. Draft the minimal dashboard screen layout and status model.
-  2. Define the frontend contract for detector output.
-  3. Set a simple Git workflow for fast hackathon collaboration.
+- Assigned role: Frontend / dashboard / app architecture.
+- Why this fits: Deep engineering experience, strong frontend background, expert Git comfort.
+- Primary responsibilities: Dashboard UX, state display, frontend/backend interface shape.
+- Owns: `team/arpit/`, the React dashboard in `dashboard/` (Nicholas scaffolded it; Arpit is the long-term owner).
+- Avoid unless coordinated: Reframing the mission/pitch, changing detector behavior, editing Sebastian coordination docs.
+- **Current state (2026-05-03):**
+  - ✅ Dashboard scaffolded (`dashboard/` — React + Vite + TS, fetches `feeds.json`, renders 5 cards).
+  - ✅ Detector → dashboard contract (Pydantic schemas in `src/bluemark/schemas.py` mirrored in TS at `dashboard/src/types.ts`).
+  - ✅ Git workflow live (`CONTEXT.md` + `.githooks/` + per-author changelogs).
+  - ⏳ Optional polish: animations, "no signal" tile for the ~50% feed-throughput scenario Birger flagged, custom styling. Demo works as-is.
 
 ## Nicholas
 
-- Assigned role: Detection, simulation, and technical prototype lead.
-- Why this fits: Nicholas has strong ML/data science, image denoising, full-stack, Python, TypeScript, statistics, and hackathon experience.
-- Primary responsibilities: Own marker detection approach, video/noise simulation plan, confidence/status logic, and technical feasibility.
-- Secondary responsibilities: Support backend/API wiring, advise on model-free versus ML-based detection tradeoffs, help debug integration.
-- Owns: `team/nicholas/`, future detector files, future simulation files, future technical validation notes.
-- Coordinates with: Arpit on detector output schema, Sebastian on demo acceptance criteria, Birger on domain realism.
+- Assigned role: Detection / simulation / technical-prototype lead.
+- Why this fits: ML / data science / image denoising / Python / hackathon experience.
+- Primary responsibilities: Marker detection approach, fusion logic, status/confidence rules, technical feasibility, SME question coordination.
+- Owns: `team/nicholas/`, `src/bluemark/`, `tests/`, `scripts/`, demo asset stubs.
 - Avoid unless coordinated: Major dashboard UX decisions, final pitch language, broad repo restructuring.
-- First 3 tasks:
-  1. Propose the simplest marker/detector design that can survive degraded video.
-  2. Define `Friendly Verified`, `Unknown`, `Corrupted`, and `Possible Spoof` detection criteria.
-  3. Identify the minimum sample assets needed to prove the demo.
+- **Current state (2026-05-03):**
+  - ✅ HMAC marker verifier (`src/bluemark/marker.py`).
+  - ✅ 5-state fusion logic (`src/bluemark/fusion.py`).
+  - ✅ Pydantic schemas (`src/bluemark/schemas.py`).
+  - ✅ pytest coverage 12/12 (`tests/test_fusion.py`).
+  - ✅ Demo asset stubs (`demo_assets/mission_manifest.json`, `session_log.json`, `visual_profile_overrides.json`).
+  - ✅ `scripts/generate_feeds.py` + `scripts/run_visual_classifier.py` stub.
+  - ✅ `docs/fusion_architecture.md` + `docs/steganographic_iff.md`.
+  - ✅ Onboarding artifact (`team/nicholas/onboarding.md`).
+  - ✅ SME question list for Birger (`team/nicholas/birger_email_questions.md`).
+  - ⏳ NICK-004: technical risk register + fallback plan. Open in PF.
 
 ## Birger
 
-- Assigned role: Technical advisor and domain/pitch reviewer.
-- Why this fits: Birger has limited coding time and is not a major coder, but brings domain knowledge that can keep the demo credible.
-- Primary responsibilities: Review problem framing, validate domain language, advise on realistic operator concerns, support Q&A.
-- Secondary responsibilities: Suggest demo scenarios, review storyboard, help identify what sounds unrealistic or unsafe.
-- Owns: `team/birger/`, future domain notes, pitch review notes, scenario feedback.
-- Coordinates with: Sebastian on problem statement and pitch, Arpit on dashboard wording, Nicholas on realistic signal/degradation assumptions.
-- Avoid unless coordinated: Source code, package/dependency changes, detector implementation, frontend implementation.
-- First 3 tasks:
-  1. Review `docs/problem_statement.md` for domain credibility.
-  2. Add 3 realistic demo scenarios and what an operator would care about.
-  3. Review final pitch for safety and non-operational framing.
+- Assigned role: Domain SME / pitch reviewer.
+- Why this fits: Limited coding time, but has the operational domain knowledge to keep the demo credible.
+- Primary responsibilities: Review problem framing, validate domain language, advise on operator concerns, support Q&A.
+- Owns: `team/birger/`.
+- Avoid unless coordinated: Source code, dependency changes, detector implementation, frontend implementation.
+- **Current state (2026-05-03):**
+  - ✅ Two urgent SME answers delivered (jamming pattern ~50% intermittent, receiver compute = laptop-class). Plus the load-bearing pitch insight: friendly feeds are already watermarked operationally; BlueMark is the *steganographic + cryptographic* upgrade to that practice.
+  - ⏳ Refinement questions in `team/nicholas/birger_email_questions.md` — 9 questions, email-ready format. Async / non-blocking.
+  - ⏳ Optional: drop any prior fiber/acoustic/EW-operations notes into `team/birger/` if convenient.
 
-## Shared Interfaces
+## Shared interfaces
 
-- Detector to dashboard: status, confidence, reason, frame/time reference.
-- Demo assets to detector: clean feed, marked feed, degraded feed, malformed marker example.
-- Storyboard to implementation: exact sequence, expected visible status, human-in-the-loop warning.
-- Safety review: all public-facing language must keep the project as a simulated deconfliction aid.
+- Detector → dashboard: `FusionResult { feed_id, state, confidence, signals_used, reason }` per `src/bluemark/schemas.py`. TS mirror in `dashboard/src/types.ts`.
+- Demo assets → fusion: `mission_manifest.json`, `session_log.json`, `visual_profile_overrides.json` consumed by `scripts/generate_feeds.py`.
+- Per-author updates: `team/<name>/changelog.md`. See `CONTEXT.md` for the partitioned write-surface convention.
+- Safety review: all public-facing language must keep the project as a non-lethal identification aid; no autonomous engagement; never label "foe."

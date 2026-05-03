@@ -8,13 +8,27 @@ The pilot wears goggles that show the live feed from a camera mounted on the dro
 
 ## OSD (on-screen display)
 
-A graphical overlay drawn into the video by the drone's flight-controller chip — usually telemetry like altitude, battery, GPS, RC link RSSI. Betaflight (the dominant FPV firmware) ships with an OSD subsystem that already supports custom glyphs. We co-opt the OSD layer to embed an authenticated friendly marker. The drone's own chip draws the marker; whoever later watches the video reads it. No new hardware on the drone.
+A graphical overlay drawn into the video by the drone's flight-controller chip — usually telemetry like altitude, battery, GPS, RC link RSSI. Betaflight (the dominant FPV firmware) ships with an OSD subsystem that already supports custom glyphs. The OSD chip family (MAX7456 / AT7456 and clones) is what does the drawing.
+
+## VBI (Vertical Blanking Interval) — where the marker actually lives
+
+NTSC/PAL analog video has lines that are *never displayed* on FPV goggles or screens — the Vertical Blanking Interval, approximately lines 10–21 of each frame. Broadcast TV used VBI for teletext and closed captions for decades. **Lines 17–20 are our target.** A standard FPV receiver, goggles, or capture card never renders these lines. They are invisible to the pilot, invisible to anyone watching the feed, and invisible to an enemy capturing the signal — *unless* they specifically know to look there.
+
+This is the core insight that makes BlueMark different from existing visible watermarking. The OSD chip can be coaxed (via firmware mod) to write into VBI lines beyond its default safe-area restrictions. So:
+
+- The drone marks itself by writing HMAC bytes into VBI from the FC's OSD path. Zero added hardware.
+- The receiver extracts those VBI lines from a composite video capture (~$15 USB capture card + Pi or laptop).
+- An enemy sees only normal video plus electrical noise in the blanking interval.
+
+In short: OSD chip = the *mechanism* that lets us write into VBI without adding hardware; VBI = the *location* that's invisible to anyone not specifically extracting it.
 
 ## HMAC marker (BlueMark's mechanism)
 
-Marker payload format: `<mission_id>:<unix_timestamp>:<hex_hmac32>`. HMAC-SHA256 of `<mission_id>:<ts>` with a per-mission secret, truncated to 32 hex chars. Verifier checks: (1) parse format, (2) HMAC matches, (3) timestamp inside a freshness window (default 10s — prevents replay). Real production would rotate the secret per mission and likely use 128-bit truncation, but for hackathon-grade the 32-hex truncation is plenty.
+**Hackathon payload (in code):** `<mission_id>:<unix_timestamp>:<hex_hmac32>`. HMAC-SHA256 of `<mission_id>:<ts>` with a per-mission secret, truncated to 32 hex chars. Verifier checks: (1) parse format, (2) HMAC matches, (3) timestamp inside a freshness window (default 10s — prevents replay).
 
-The marker rotation Sebastian mentioned in the meeting (~20s in real ops) maps to the timestamp's freshness window — every fresh frame embeds a new marker carrying a fresh timestamp, so observed marker bytes are continuously changing. An adversary who captures a marker can't replay it past the freshness window.
+**Production payload (per source concept doc):** bit-packed: `[4-bit version][16-bit unit ID][32-bit truncated HMAC][rolling counter]` ≈ 52–64 bits, fits in a single VBI line. Same cryptographic substance; the receiver-side decoder swaps trivially.
+
+The marker rotation Sebastian mentioned in the meeting (~20s in real ops) is the freshness window in disguise — every fresh frame embeds a new marker carrying a fresh timestamp, so observed marker bytes are continuously changing. An adversary who captures a marker can't replay it past the window.
 
 ## Drone types in the conflict (rough sketch — to be refined by Birger)
 

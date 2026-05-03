@@ -2,6 +2,18 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Nicholas's agent writes here.
 
+### 2026-05-03 03:00 - Nicholas (via Claude Code)
+
+- Changed: **Comprehensive consistency pass** — drift sweep across code, docs, division of labor, and PF. Adopted Sebastian's "Steganographic IFF FPV" concept doc as the load-bearing pitch framing (VBI lines 17–20 of NTSC, invisible-to-enemy steganography on top of HMAC). Created the email-ready Birger SME doc — 9 unanswered questions in 3 groups, copy-pasteable.
+- Files:
+  - **Rewritten:** `README.md` (was massively stale — claimed "implementation has not started"), `docs/problem_statement.md`, `docs/demo_storyboard.md`, `team/work_allocation.md`.
+  - **New:** `docs/steganographic_iff.md` (single-source pitch reference for the VBI/steganographic concept), `team/nicholas/birger_email_questions.md` (the email-ready unanswered list).
+  - **Edited:** `CONTEXT.md` (4 → 5 states), `AGENTS.md` (placeholders cleaned, VBI mention added, hard-event-constraint already there), `HANDOFF.md` (current status section refreshed), `docs/demo_plan.md` (4 → 5 states), `team/README.md` (member_X placeholders → real names), `team/nicholas/onboarding.md` (added VBI section between OSD and HMAC), `team/nicholas/meeting_2026-05-02.md` (SME seed marked superseded; Q10 risk-zone struck), memory `project_bluemark.md` (steganographic framing + open SME questions pointer).
+- Why: User flagged "this is EVERYTHING" — make sure the project is consistent across surfaces before the deadline. Drift discovered: 4-state language in 4 places, member_X placeholders in 2 places, README.md not updated since pre-implementation, no single-source pitch doc explaining what's *actually* novel. The PDF answered the user's pushback ("I don't buy that encrypted verification isn't already done") — the novelty is steganography (VBI placement) combined with cryptography, not crypto alone.
+- Assumptions: Cross-team edits (Sebastian's `README.md`, `HANDOFF.md`, `docs/`, `team/work_allocation.md`, `team/README.md`, `AGENTS.md`) authorized by user. The "Steganographic IFF FPV.pdf" Sebastian iterated with another AI is the load-bearing concept; we adopt its VBI/payload story but explicitly *reject* its "Unknown = eligible to jam" rule (conflicts with our human-in-loop event constraint and the 5-state taxonomy). Memory updates document this rejection.
+- Open questions: None blocking. Birger's 9 refinement questions are async-friendly; demo runs without them.
+- Next step: Hand the user the email-friendly Birger doc. After Birger replies, feed answers back for plan update + final pass per user's two-task plan.
+
 ### 2026-05-03 02:00 - Nicholas (via Claude Code)
 
 - Changed: Captured Birger's preliminary SME answers and clarified the scope confusion he flagged on Q2. Updated `birger_urgent_questions.md` with answers inline + a scope clarifier (BlueMark adds compute to neither the airframe nor the FPV camera stack — only to the ground receiver). Added a "Birger SME preliminary answers" section to `meeting_2026-05-02.md`. Memory updated.

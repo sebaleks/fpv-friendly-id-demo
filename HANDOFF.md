@@ -2,17 +2,17 @@
 
 Use this file to keep the team coordinated during the hackathon.
 
-## Current Status
+## Current Status (post-implementation push, 2026-05-03)
 
-- Repo scaffold initialized.
-- Team interview template added.
-- Team work allocation and assistant suggestions added.
-- Placeholder team names corrected to actual teammate names.
-- Concrete demo plan added.
-- Cross-agent context sync workflow manually adopted for this clone.
-- Sebastian demo planning docs added.
-- Cost tier framing added.
-- No implementation started.
+- ✅ Cross-agent context sync workflow live (`CONTEXT.md` + `.githooks/`).
+- ✅ Sebastian demo planning docs done (`docs/demo_plan.md`, `demo_script.md`, `acceptance_checklist.md`, `dashboard_states.md`, `cost_tiers.md`).
+- ✅ Architecture locks: Problem A (drone marks own video, ground EW reads, human decides), human-in-loop hard event constraint, 5-state taxonomy, risk-zone dropped.
+- ✅ **Implementation shipped:** Python core (`src/bluemark/` — HMAC marker + 5-state fusion + Pydantic schemas); React + Vite + TS dashboard (`dashboard/`); pytest 12/12 passing; `feeds.json` covers all 5 states.
+- ✅ ML scope locked: off-the-shelf pretrained YOLO via ONNX (no fine-tuning); stub at `scripts/run_visual_classifier.py` for Sebastian; demo runs without model loaded.
+- ✅ **Steganographic framing adopted** (per Sebastian's "Steganographic IFF FPV" concept doc): production marker embeds in VBI lines 17–20 of NTSC analog video; demo simulates the receiver-side read via `feeds.json`. See `docs/steganographic_iff.md`.
+- ⏳ Birger SME questions: 2 urgent answered (intermittent ~50% jamming, laptop-class receiver, "all friendly feeds already watermarked" insight); 9 refinement questions outstanding in `team/nicholas/birger_email_questions.md` (email-ready).
+- ⏳ Pitch slides: Sebastian-owned, in flight.
+- ⏳ Demo rehearsal: not yet run end-to-end.
 
 ### 2026-05-02 15:01 - Codex
 

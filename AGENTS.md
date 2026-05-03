@@ -2,7 +2,7 @@
 
 ## Project Goal
 
-BlueMark FPV is a hackathon proof-of-concept for helping friendly EW or receiver teams identify simulated friendly FPV video feeds through an authenticated OSD-like marker and receiver-side dashboard.
+BlueMark FPV is a hackathon proof-of-concept for helping friendly EW or receiver teams identify simulated friendly FPV video feeds through a **steganographic HMAC-authenticated marker** (production design: embedded in the Vertical Blanking Interval of the analog video, invisible to pilot and enemy) plus a receiver-side dashboard. The hackathon demo simulates the receiver-side reading via pre-generated `feeds.json`; the cryptographic and fusion logic is real.
 
 This is a deconfliction and identification-aid demo only.
 
@@ -28,8 +28,7 @@ Keep all work framed around simulated video, benign identification, operator war
 - Do not edit another person's team area without checking their notes first.
 - Before editing `team/<name>/`, read `team/<name>/suggestions.md` if it exists.
 - Sebastian owns repo coordination and final integration decisions.
-- `member_2` and `member_3` are placeholder teammate names until renamed.
-- `member_4` is a technical-details contributor and not expected to be a major coder.
+- Birger is the domain SME / pitch reviewer (limited coding time).
 
 ## Team Suggestions
 

@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 02:59 - Sebastian (via Claude Code)
+
+- Changed: Re-synced after the 2026-05-03 push (steganographic IFF reframing, Birger SME final-pass, NICK-004 risk register, Wokwi firmware sim, Natsec PS2 framing lock, Wokwi cross-language verifier). Created BlueMark FPV project + 5 parent tasks + 11 subtasks in Priority Forge against the post-implementation outstanding list.
+- Files: `team/sebastian/changelog.md` (this file). PF project id `f6c98d87-c1b5-48a5-bfd3-f2b48dd780c9`.
+- Why: Sebastian's changelog had not caught up to the 2026-05-03 work, and the four remaining owner items (pitch slides, demo rehearsal, judging Q&A FAQ, optional ML stretch) needed a tracked priority order before integration push.
+- Assumptions: Pitch slides, end-to-end rehearsal, and judge FAQ are P0/P1; ONNX YOLO stretch stays P3 per Birger Q2.
+- Open questions: None new — Birger Q5 prior-art reframing is the load-bearing pitch fact.
+- Next step: Execute PF top-priority — start the rehearsal pass (`scripts/generate_feeds.py` → dashboard renders 5 cards → walk acceptance_checklist.md → time narration), in parallel with outlining the deck.
+
 ### 2026-05-02 15:01 - Sebastian (via Codex)
 
 - Changed: Added per-drone cost tiers and linked the software-first cost framing from system architecture.

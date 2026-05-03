@@ -2,6 +2,15 @@
 
 Append new entries at the **top** (newest first). Format defined in `CONTEXT.md`. Only Sebastian's agent writes here.
 
+### 2026-05-03 21:30 - Sebastian (via Claude Code)
+
+- Changed: Shipped `docs/judge_qa_practice.md` — 18 adversarial Q&A practice questions organized by judge archetype (VC, defense prime, military/government, academic, AI lab) with prepared answers + a "do not volunteer" defensive list + a pre-demo prep checklist. Sourced from real Cerebral Valley NatSec Hackathon judge demographics: past judges include Raj Shah (Shield Capital), A.J. Bertone (IQT), Gokul Subramanian (Anduril), Nand Mulchandani (CIA former-CTO), Ritwik Gupta (DIU), SOCOM/SOCPAC reps, Stanford Defense Tech, plus 2026 sponsor list (Palantir, DCVC, OpenAI, Scale AI, Vannevar Labs, Primer). Critical context flagged: 1st-place winner in 2024 was *AI Laser Sentinel* (autonomous drone-killing laser) — opposite end of safety spectrum from BlueMark — so judges may instinctively prefer "shoot it down" over "identify and let humans decide." Doc tells presenter to defend the human-in-loop posture as doctrinally correct, not apologetically.
+- Files: `docs/judge_qa_practice.md` (new), `team/sebastian/changelog.md`.
+- Why: User asked for a structured Q&A practice doc keyed to the actual judge demographics. Existing `docs/judge_faq.md` is 5 baseline questions; this goes deeper, more adversarial, and archetype-targeted.
+- Assumptions: Past judges return or judge-archetype is similar in 2026. xTech RFI scoring rubric (35% technical / 30% military applicability / 20% impl / 15% cost) used to weight which questions matter most. The "Q10 false-friendly rate" and "Q11 kill chain" questions are flagged as the highest-leverage rehearsal items.
+- Open questions: None. Doc is presenter-ready.
+- Next step: Read-aloud rehearsal (P0) + run the prep checklist at the bottom of the new file.
+
 ### 2026-05-03 20:50 - Sebastian (via Claude Code)
 
 - Changed: Updated `docs/demo_script.md` for `NO_SIGNAL` state landing in `2cdb559`/`0b7747e`. Mission manifest now declares 9 friendlies (A–I); only 5 (A–E) have feeds; dashboard synthesizes 4 NO_SIGNAL placeholders. Script now opens with "Nine declared, five with live signal, four lost" — turns the manifest cross-check beat from speculative to literal (operator can see the lost-signal rows on screen). Compensated by trimming redundant phrasing in the architecture sentence and the FEED-D+C combined beat. Lands at 3:11 with click overhead at 165 wpm.

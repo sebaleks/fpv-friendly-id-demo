@@ -25,6 +25,19 @@ def verify_marker(
     """Returns evidence dict consumed by fusion. Never raises on bad input."""
     if now is None:
         now = int(time.time())
+    # NICK-051: an empty / whitespace-only marker means "no marker observed,"
+    # which should drop the feed to UNKNOWN_NEEDS_REVIEW (not SIGNATURE_CORRUPTED).
+    # Set extracted=False so fusion's marker_extracted check fires correctly.
+    if not marker or not marker.strip():
+        return {
+            "extracted": False,
+            "decoded": False,
+            "hmac_valid": False,
+            "fresh": False,
+            "mission_id": None,
+            "ts": None,
+            "fail_reason": "empty",
+        }
     result = {
         "extracted": True,
         "decoded": False,

@@ -60,6 +60,18 @@ def test_verify_marker_corrupted_undecodable():
     assert ev["decoded"] is False
 
 
+def test_verify_marker_empty_string():
+    """NICK-051: empty marker should not be classified as SIGNATURE_CORRUPTED."""
+    ev = verify_marker(SECRET, "", now=int(time.time()))
+    assert ev["extracted"] is False
+    assert ev["decoded"] is False
+    assert ev["fail_reason"] == "empty"
+    # And it should drop the feed to UNKNOWN, not corrupted.
+    signals = [FusionSignal(name="marker", score=0.0, evidence=ev)]
+    r = fuse_signals("FEED-EMPTY", signals)
+    assert r.state is FusionState.UNKNOWN_NEEDS_REVIEW
+
+
 # Fusion tests — one per state. NICK-026: assert signals_used contents,
 # not just state, to prevent silent attribution regressions.
 

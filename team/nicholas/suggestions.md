@@ -38,4 +38,4 @@ Nicholas owns detection, simulation, and technical feasibility.
 
 ## Definition of Done
 
-The team has a feasible detector plan that can drive the dashboard statuses in a simulated degraded-video demo.
+The team has a feasible detector plan that can drive the **5-state dashboard** taxonomy (`FRIENDLY_VERIFIED`, `LIKELY_FRIENDLY`, `UNKNOWN_NEEDS_REVIEW`, `SIGNATURE_CORRUPTED`, `POSSIBLE_SPOOF` — see `docs/dashboard_states.md`) in a simulated degraded-video demo. As of 2026-05-03 the receiver-side core is shipped (`src/bluemark/`), the dashboard is shipped (`dashboard/`), and the demo runs end-to-end on `feeds.json`. Production roadmap is captured in `docs/steganographic_iff.md`.

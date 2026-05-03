@@ -1,96 +1,84 @@
 # Demo Script
 
-## 3-Minute Live Narration (Authoritative — no pitch slides)
+## 60-Second Live Pitch (Authoritative — No Slides)
 
-> *Four parts: (1) background + US Army relevance, (2) problem statement, (3) solution/demo deep dive, (4) scalability/cost/margin. Every beat keeps the persistent footer "Identification aid only. Human decision required." visible. Total target: 3:00.*
+> *Goal: One intuitive minute. Do not walk all five states. Show the contrast pair: one suspicious feed and one verified feed. The middle states remain visible for Q&A. Every beat keeps the persistent footer "Identification aid only. Human decision required." visible.*
 
-### Pre-show (off-stage, before opening)
-- Dashboard open in browser at `http://localhost:5174/`.
-- **Nothing selected** — right pane shows MissionOverview by default.
-- Sort dropdown set to **Severity** (default). Density: compact. Video toggle: on.
-- TacticalMap visible bottom-right.
+### Pre-Show
 
----
-
-### Part 1 · 0:00 – 0:25 — Background + US Army relevance
-*(Don't touch the dashboard yet. Look at the audience.)*
-
-"In Ukraine, FPV drones have become the dominant battlefield platform — millions deployed, single-use, swarming. The US Army is following: division-level FPV units stood up in 2024, and the operational model is converging. But there's a gap. These platforms have **no IFF**. None. When friendly and adversary FPVs share the same airspace and the same video signal, the operator can't tell them apart fast enough."
-
-### Part 2 · 0:25 – 0:40 — Problem statement
-"Traditional IFF transponders don't fit on a four-hundred-dollar single-use drone. No spare hardware budget. No spare bandwidth. No spare power. The question we asked: can we add a cryptographic friendly-marker to FPV video, **without adding a single component to the drone?**"
+- Dashboard open at `http://localhost:5174/`.
+- Sort set to **Severity**.
+- Start on **Mission Control** with no feed selected.
+- Footer visible: `Identification aid only. Human decision required.`
 
 ---
 
-### Part 3 · 0:40 – 2:40 — Solution + live demo
+## Timed Script (145 words — exactly 60 seconds at normal speaking pace)
 
-#### 0:40 – 0:55 — The architecture (one sentence) + open Mission Control
-*(Gesture at the screen as you say "here's what the operator sees.")*
+### 0:00 – 0:25 — Problem & Insight
 
-"Yes — by embedding an HMAC-authenticated marker in the **unrendered VBI lines** of the analog video. Invisible to the picture, generated on the drone's existing flight controller. Zero added hardware; detection runs on a backpack laptop. Here's what an EW operator sees. \[gesture top bar\] **Nine declared friendlies in today's mission, five with live signal, four lost.** Two of the five need operator review. List sorted by severity — top is what needs attention now."
+*(Look at the audience, not the screen. Speak authoritatively.)*
 
-#### 0:55 – 1:15 — FEED-E: `POSSIBLE_SPOOF`
-*(Click FEED-E in the left list.)*
+"Ukraine will deploy seven million drones in 2026. Our SME reports half of current drone losses are friendly fire—EW teams accidentally jamming their own assets. Traditional IFF is too expensive for cheap FPVs. 
 
-"Top of the triage. POSSIBLE_SPOOF. \[point to signal trace\] Marker present, **HMAC failed**. A captured drone replaying yesterday's marker, or an adversary copying the byte pattern without the key. The system flags suspicion — it never flags *engage*."
+BlueMark solves this with zero added drone hardware. We hide a cryptographic fingerprint in the invisible lines of analog video that screens never display. The drone's existing flight controller writes it; the laptops EW teams already carry read it. It's invisible, unforgeable, and operates completely offline."
 
-#### 1:15 – 1:35 — FEED-D + FEED-C: ambiguous in different ways
-*(Click FEED-D, then FEED-C.)*
+### 0:25 – 0:45 — Live Contrast Pair
 
-"\[click FEED-D\] SIGNATURE_CORRUPTED — partial marker, analog noise. \[click FEED-C\] UNKNOWN — no marker at all. Both end up the same place: **operator review**. **Unknown is not foe** — that's the hard line."
+*(Gesture to the dashboard.)*
 
-#### 1:35 – 1:55 — FEED-B: `LIKELY_FRIENDLY`
-*(Click FEED-B.)*
+"Here is the operator dashboard. Crucially: we only mark friendly, never foe. Anything unauthenticated is unknown, never hostile.
 
-"LIKELY_FRIENDLY. \[point to signal trace\] Five signals pass, two missing. We **deliberately do not promote it** to fully verified. Minimum-false-friendly is the design goal — a foe stealing one component never climbs to FRIENDLY_VERIFIED."
+\[click FEED-E\] At the top: POSSIBLE_SPOOF. The cryptographic check failed. Suspicious, but we never flag *engage*.
 
-#### 1:55 – 2:20 — FEED-A: `FRIENDLY_VERIFIED`
-*(Click FEED-A.)*
+\[click FEED-A\] Here: FRIENDLY_VERIFIED. The fingerprint is valid, fresh, and matches the mission."
 
-"All seven signals PASS. HMAC marker is the source of truth; the other six are corroboration. Highest confidence. **Identification aid only. Human decision required.** That phrase is on every screen, every state, every fallback path. We never label any feed *foe* — the complement of friendly-verified is not-confirmed-friendly, not hostile."
+### 0:45 – 1:00 — Safety + Scale Close
 
-#### 2:20 – 2:40 — Operational features + return to Mission Control
-*(Click "Mission Control" in the top bar.)*
+*(Click "Mission Control" in the top bar. Point to the persistent footer.)*
 
-"Couple of operationally useful touches. \[point to TacticalMap\] **Every feed has estimated coordinates** — operators can prioritize unknowns or possible spoofs near sensitive assets without scanning the list. \[point to declared-friendlies panel — four NO_SIGNAL rows visible\] **Manifest cross-check** — these four were declared in the mission but never showed signal. Could be link loss, downed asset, or never launched. The system surfaces the gap; the operator decides what to do about it. \[point to event log\] **Recent transitions** show what just changed, not just current state. And a pretrained visual classifier sits behind a safety invariant in the repo — we cut it from the live path because the cryptographic marker is sufficient."
+"Every screen enforces our safety boundary: **Identification aid only. Human decision required.** We inform the operator; we don't automate the trigger. 
 
----
-
-### Part 4 · 2:40 – 3:00 — Scalability, cost, margin
-"Scaling. Marker generation is a software flash to firmware already flying — **zero added per-drone cost**. At a dollar per drone, a seven-million-drone peer fight is a seven-million-dollar program. **One prevented friendly-fire incident pays for the entire deployment.** The unit economics work at any scale you can name."
+By eliminating friendly fire, we effectively double the useful fleet without building a single new drone. That is tactical-edge resilience, delivered as a firmware update."
 
 ---
 
 ## Click Path Cheat-Sheet
 
 1. **Pre-show**: dashboard at `:5174`, severity sort, no feed selected, TacticalMap visible.
-2. **0:40** — start gesturing at the dashboard (no click yet).
-3. **0:55** click FEED-E → spoof beat.
-4. **1:15** click FEED-D → corrupted beat.
-5. **1:25** click FEED-C → unknown beat.
-6. **1:35** click FEED-B → likely beat.
-7. **1:55** click FEED-A → verified beat.
-8. **2:20** click "Mission Control" in top bar → back to overview.
-9. **2:40** start the cost/scale close. Footer holds the room.
+2. **0:00 – 0:20** — talk to the audience, gesture at dashboard.
+3. **0:25** click `FEED-E` → spoof beat.
+4. **0:35** click `FEED-A` → verified beat.
+5. **0:45** click "Mission Control" → point to footer, close.
 
-## What To Say For Each State (one-liners — for Q&A)
+---
 
-- `POSSIBLE_SPOOF`: "Marker pattern present, HMAC failed. Suspicious, not actionable."
-- `SIGNATURE_CORRUPTED`: "Marker bytes present, too noisy to verify. Operator reviews."
-- `UNKNOWN_NEEDS_REVIEW`: "No marker. Unknown is not foe."
-- `LIKELY_FRIENDLY`: "Marker valid, supporting signals missing. We refuse to promote — false-friendly is the worst error."
-- `FRIENDLY_VERIFIED`: "All seven signals pass. Aid only."
+## Deep QA Notes
+
+### Strongest Narrative Arc
+- **Problem**: 50% friendly fire loss rate due to lack of IFF on cheap drones.
+- **Insight**: Analog video has invisible lines (VBI) that are transmitted but not displayed.
+- **Solution**: A keyed cryptographic fingerprint hidden in those invisible lines.
+- **Demo**: Show the contrast between a failed fingerprint (`POSSIBLE_SPOOF`) and a valid fingerprint (`FRIENDLY_VERIFIED`).
+- **Scale**: Zero added drone hardware means we can deploy at the speed of a flash.
+
+### Narrative Risks To Avoid
+- **Do not walk all five states in one minute.** It becomes a rushed UI tour instead of a pitch. The middle states (`SIGNATURE_CORRUPTED`, `UNKNOWN_NEEDS_REVIEW`, `LIKELY_FRIENDLY`) remain visible on screen for Q&A.
+- **Do not say the system identifies enemies.** It identifies friendlies only. Anchor "Unknown != Foe" explicitly before showing feeds.
+- **Do not lead with "HMAC" or "VBI" before explaining them.** Say "cryptographic fingerprint" and "invisible lines." Avoid losing non-technical judges early.
+- **Do not overclaim live analog VBI extraction.** The demo proves crypto, fusion, firmware simulation, and dashboard; the real OSD VBI write routine is deferred production work.
+- **Do not use arbitrary cost numbers.** Say "zero added drone hardware" instead of "$1 per drone" to accurately reflect the software-only approach.
+
+### Q&A One-Liners
+- **What is VBI?** "Invisible lines in every analog video frame. The signal carries them; screens do not display them."
+- **What is the technical contribution?** "A cryptographic IFF marker hidden in VBI lines 17-20 of live FPV analog video, generated on the existing flight controller."
+- **What does the demo really prove?** "The firmware simulation and Python receiver produce and verify the exact same marker, the fusion engine classifies the feed, and the dashboard renders the operator workflow."
+- **What is deferred?** "The real Betaflight OSD-chip write routine that places bytes into VBI lines 17-20. The crypto and receiver logic already work."
+- **Is this targeting?** "No. It only marks friendly. Unknown is not foe. Human decision required."
+- **What about the 50% loss claim?** "That's from our Ukrainian SME's operational context; we use it as a directional pain signal, not a lab-measured benchmark."
+- **Does the receiver need new hardware?** "No. It runs on the laptops or EW scanners teams already carry, using a standard $15 analog video capture card."
 
 ## Recovery Patter (if it breaks mid-demo)
 
-- **Dashboard freezes**: "Live system — edge deployments fail; that's why the same `feeds.json` shape ships as a scripted fallback." Refresh the page or pivot to the 30-second emergency version.
-- **Click doesn't register**: keep talking, click again. Don't draw attention to it.
-- **Wrong sort applied**: don't try to fix mid-walk; narrate whichever state is at the top of the list.
-
-## 30-Second Emergency Version
-
-"BlueMark FPV is software-only friendly-IFF for cheap analog FPV drones — Ukraine's dominant platform, the US Army's next gap. We embed an HMAC marker in the unrendered VBI lines of the video. Zero added hardware on the drone. \[click FEED-E\] Spoof — HMAC failed. \[click FEED-A\] Verified — all seven signals pass. Every state on this dashboard says: **Identification aid only. Human decision required.** Edge-on-edge. No cloud. A dollar per drone."
-
-## Closing Sentence (if you only get one)
-
-"The value is clearer human deconfliction at the tactical edge — running entirely on hardware already in the field, in the austere, EW-contested, disconnected environments where IFF actually has to work."
+- **Dashboard freezes**: "Live system — edge deployments fail; that's why the same `feeds.json` shape ships as a scripted fallback." Refresh the page or pivot to a 30-second summary.
+- **Wrong sort applied**: Don't try to fix mid-walk; just narrate whichever state is at the top of the list.

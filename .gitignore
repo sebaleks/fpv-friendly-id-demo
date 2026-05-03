@@ -29,3 +29,7 @@ demo_assets/sample_frames/*.png
 
 # Classifier output (regenerated each run)
 demo_assets/classifier_log.json
+
+# Local agent / MCP config
+.claude/
+.mcp.json

@@ -21,3 +21,12 @@ export interface FeedsBundle {
   mission_id: string;
   feeds: FusionResult[];
 }
+
+export interface MissionManifest {
+  mission_id: string;
+  valid_from_unix: number;
+  valid_until_unix: number;
+  friendly_drone_ids: string[];
+  issued_by: string;
+  notes?: string;
+}
